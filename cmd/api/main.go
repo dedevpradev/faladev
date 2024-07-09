@@ -2,7 +2,7 @@ package main
 
 import (
 	"faladev/config"
-	"faladev/internal/database/models"
+	"faladev/internal/models"
 	"faladev/pkg/http"
 	"fmt"
 

@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"faladev/config"
-	"faladev/internal/database/models"
+	"faladev/internal/models"
 	"faladev/internal/services"
 )
 

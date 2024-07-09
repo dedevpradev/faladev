@@ -3,7 +3,7 @@ package services
 import (
 	"context"
 	"faladev/config"
-	"faladev/internal/database/models"
+	"faladev/internal/models"
 	"fmt"
 	"net/http"
 

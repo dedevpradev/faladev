@@ -2,7 +2,7 @@ package main
 
 import (
 	"faladev/internal/database"
-	"faladev/internal/database/models"
+	"faladev/internal/models"
 	"fmt"
 	"log"
 )
