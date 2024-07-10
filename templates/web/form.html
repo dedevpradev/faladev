@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Junte-se ao FalaDev para mentorias gratuitas sobre carreira e tecnologia.">
+    <meta name="keywords" content="mentoria, desenvolvimento de software, carreira, tecnologia, programação, FalaDev">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+    <link rel='shortlink' href='https://faladev.marcosfonseca.com.br/' />
+    <link rel="shortcut icon" type="image/x-icon" href="static/imgs/faladev.ico"/>
+
+    <title>Mentoria FalaDev - Carreira e Tecnologia</title>
+</head>
+<body class="flex items-center justify-center h-screen">
+    <div class="w-full max-w-xs">
+        <header class="flex justify-center items-center space-x-4 w-full text-center pb-4">
+            <img src="static/imgs/faladev.jpg" alt="" height="50" width="200">
+        </header>
+        <form action="/event" method="post" class="mt-5 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
+                    Nome
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name" type="text" name="name" required>
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
+                    E-mail
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" type="email" name="email" required>
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="phone">
+                    Telefone
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="phone" type="text" name="phone" required>
+            </div>
+            <div class="flex items-center justify-center">
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                    Quero participar
+                </button>
+            </div>
+        </form>
+        <hr class="mb-10">
+        <footer class="flex justify-center items-center space-x-4 w-full text-center pb-4">
+            <a href="https://www.instagram.com/faladev.tech/" target="_blank" class="flex items-center space-x-2">
+                <img src="static/imgs/instagram.svg" alt="Instagram FalaDev" style="height: 20px;">
+                <span class="text-xs">@faladev.tech</span>
+            </a>
+            <a href="https://www.youtube.com/@FalaDev" target="_blank" class="flex items-center space-x-2">
+                <img src="static/imgs/youtube.svg" alt="YouTube FalaDev" style="height: 30px;">
+                <span class="text-xs">@FalaDev</span>
+            </a>
+            <a href="https://chat.whatsapp.com/BZpPgPOH9F091JLiIvRMpd" target="_blank" class="flex items-center space-x-2">
+                <img src="static/imgs/whatsapp.svg" alt="WhatsApp FalaDev" style="height: 30px;">
+                <span class="text-xs">@FalaDev</span>
+            </a>
+        </footer>
+        <p class="text-xs text-center">
+            Essa é uma mentoria gratuita para quem está entrando na área de tecnologia, migrando de área ou buscando crescimento profissional.
+        </p>
+    </div>
+</body>
+</html>
