@@ -3,32 +3,47 @@ package services
 import (
 	"fmt"
 
+	"github.com/pkg/errors"
+	log "github.com/sirupsen/logrus"
 	"google.golang.org/api/calendar/v3"
 )
 
-func AddGuestToEvent(calendarService *calendar.Service, hangoutLink, email string) (*calendar.Event, error) {
+func findEventByHangoutLink(calendarService *calendar.Service, hangoutLink string) (*calendar.Event, error) {
 
 	events, err := calendarService.Events.List("primary").Do()
+
 	if err != nil {
-		return nil, fmt.Errorf("error listing events: %v", err)
+		return nil, errors.Wrap(err, "error listing events")
 	}
 
-	var eventDetails *calendar.Event
 	for _, event := range events.Items {
 		if event.HangoutLink == hangoutLink {
-			eventDetails = event
-			break
+			return event, nil
 		}
 	}
 
-	if eventDetails == nil {
-		return nil, fmt.Errorf("event with HangoutLink %s not found", hangoutLink)
+	return nil, fmt.Errorf("event with HangoutLink %s not found", hangoutLink)
+}
+
+func AddGuestToEvent(calendarService *calendar.Service, hangoutLink, email string) (*calendar.Event, error) {
+
+	eventDetails, err := findEventByHangoutLink(calendarService, hangoutLink)
+
+	if err != nil {
+		return nil, err
 	}
 
 	updatedEvent, err := calendarService.Events.Get("primary", eventDetails.Id).Do()
 
 	if err != nil {
-		return nil, fmt.Errorf("Error getting event details: %v", err)
+		return nil, errors.Wrap(err, "error getting event details")
+	}
+
+	for _, attendee := range updatedEvent.Attendees {
+		if attendee.Email == email {
+			log.Infof("Guest %s is already in the event %s - Meet: %s\n", email, eventDetails.Id, hangoutLink)
+			return updatedEvent, nil
+		}
 	}
 
 	attendee := &calendar.EventAttendee{Email: email}
@@ -38,10 +53,10 @@ func AddGuestToEvent(calendarService *calendar.Service, hangoutLink, email strin
 	_, err = calendarService.Events.Update("primary", updatedEvent.Id, updatedEvent).Do()
 
 	if err != nil {
-		return nil, fmt.Errorf("Error adding guest to event: %v", err)
+		return nil, errors.Wrap(err, "error adding guest to event")
 	}
 
-	fmt.Printf("Convidado %s adicionado ao evento %s - Meet: %s\n", email, eventDetails.Id, hangoutLink)
+	log.Infof("Guest %s added to the event %s - Meet: %s\n", email, eventDetails.Id, hangoutLink)
 
 	return updatedEvent, nil
 }
