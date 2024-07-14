@@ -89,6 +89,43 @@ Este projeto é uma aplicação Go que integra com o Google Calendar e tem permi
    ```
    Na primeira vez que você rodar o projeto, você deverá acessar o link será gerado no console para autorizar o seu aplicativo na sua conta Google.
 
+## Instruções para com Docker
+
+   Para iniciar a aplicação, execute o comando:
+
+   ```bash
+   docker-compose up -d
+   ```
+
+   Para parar e remover contêineres, redes, volumes e imagens usadas pelo docker compose, execute o comando:
+
+   ```bash
+   docker-compose down --rmi all
+   ```
+
+   Para limpar caches e configurações locais, você pode remover os arquivos de configuração e imagens desnecessárias:
+
+   ```bash
+   docker system prune -a --volumes
+   ```
+
 ## Como Usar
 
-Após iniciar a aplicação, você poderá acessar a interface web no endereço configurado para a aplicação (exemplo: http://localhost:8080).
+   Para acessar a aplicação:
+
+   ```bash
+   http://localhost:8080
+   ```
+
+   Para acessar o Jaeger:
+
+   ```bash
+   http://localhost:16686/
+   ```
+
+   Para acessar o pgAdmin:
+
+   ```bash
+   http://localhost:5050/
+   ```
+
