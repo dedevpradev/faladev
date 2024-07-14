@@ -13,8 +13,6 @@ func main() {
 
 	db := database.GetDB()
 
-	db.Exec("CREATE DATABASE faladev;")
-
 	db.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";")
 
 	errStudents := db.AutoMigrate(&models.Student{})
