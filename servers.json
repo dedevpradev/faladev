@@ -1,0 +1,15 @@
+{
+    "Servers": {
+      "1": {
+        "Name": "Postgres Docker",
+        "Group": "Servers",
+        "Host": "postgres",
+        "Port": 5432,
+        "MaintenanceDB": "faladev",
+        "Username": "userpostgres",
+        "Password": "passwordpostgres",
+        "SSLMode": "prefer",
+        "ConnectionTimeout": 10
+      }
+    }
+  }
