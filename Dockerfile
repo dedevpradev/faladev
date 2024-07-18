@@ -1,13 +1,21 @@
+FROM node:14-alpine as frontend
+
+WORKDIR /app
+COPY ./frontend .
+RUN npm install
+RUN npm run build
+
 FROM golang:1.21
 
 RUN go install github.com/cespare/reflex@latest
 
 WORKDIR /app
 
-COPY go.mod go.sum ./
+COPY ./backend/go.mod ./backend/go.sum ./
 RUN go mod download
+COPY ./backend .
 
-COPY . .
+COPY --from=frontend /app/build ./frontend/build
 
 COPY entrypoint.sh /app/
 
