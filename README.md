@@ -114,6 +114,12 @@ Este projeto é uma aplicação Go que integra com o Google Calendar e tem permi
    Para acessar a aplicação:
 
    ```bash
+   http://localhost:3000
+   ```
+
+   URL da API:
+
+   ```bash
    http://localhost:8080
    ```
 
