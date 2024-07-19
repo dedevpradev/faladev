@@ -123,6 +123,12 @@ Selecione a opção `Connect to server` e clique no botão de Play.
    Para acessar a aplicação:
 
    ```bash
+   http://localhost:3000
+   ```
+
+   URL da API:
+
+   ```bash
    http://localhost:8080
    ```
 

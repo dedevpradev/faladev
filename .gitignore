@@ -1,3 +1,2 @@
-.env
-
+backend/.env
 __debug*

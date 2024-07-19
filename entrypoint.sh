@@ -4,6 +4,8 @@ set -e
 
 echo "Running database migrations..."
 
+cd backend
+
 go run cmd/migrate/main.go
 
 echo "Starting the application with reflex..."
