@@ -50,6 +50,7 @@ services:
       OTEL_EXPORTER_JAEGER_ENDPOINT: http://jaeger:14268/api/traces
     ports:
       - "8080:8080"
+      - "2345:2345"
     volumes:
       - ./backend:/app/backend
       - ./frontend/build:/app/frontend/build
