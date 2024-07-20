@@ -118,6 +118,23 @@ O comando padrão para acessar essa aba é `Ctrl+Shift+D` ou no Mac `Cmd+Shift+D
 Selecione a opção `Connect to server` e clique no botão de Play.
 ![Run and debug tutorial](.github/images/run_and_debug.png)
 
+
+## Como atualizar a documentação Swagger?
+
+Instale o pacote golang `swag`:
+
+   ```bash
+  go install github.com/swaggo/swag/cmd/swag@latest 
+   ```
+
+Vá para a pasta backend e rode o seguinte comando:
+
+   ```bash
+   swag init -g ./cmd/api/main.go -o cmd/docs
+   ```
+
+![Run and debug tutorial](.github/images/run_and_debug.png)
+
 ## Como Usar
 
    Para acessar a aplicação:
@@ -142,5 +159,11 @@ Selecione a opção `Connect to server` e clique no botão de Play.
 
    ```bash
    http://localhost:5050/
+   ```
+
+   Para acessar a documentação swagger:
+
+   ```bash
+   http://localhost:8080/swagger/index.html
    ```
 
