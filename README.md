@@ -62,7 +62,7 @@ Este projeto é uma aplicação Go que integra com o Google Calendar e tem permi
 
 4. **Configurar Variáveis de Ambiente:**
 
-   Crie um arquivo .env na raiz do projeto e adicione as seguintes variáveis, incluindo suas credenciais do Google:
+   Crie um arquivo .env no diretório ./backend e adicione as seguintes variáveis, incluindo suas credenciais do Google:
 
    ```env
    GOOGLE_MEET_EVENT=https://meet.google.com/link-do-meet-do-evento
