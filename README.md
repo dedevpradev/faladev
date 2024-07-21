@@ -109,6 +109,15 @@ Este projeto é uma aplicação Go que integra com o Google Calendar e tem permi
    docker system prune -a --volumes
    ```
 
+## Como usar o Debugger do VScode com Docker?
+
+Tendo iniciado a aplicação com o comando do `docker compose` basta navegar até a aba `Run and Debug` do VSCode.
+
+O comando padrão para acessar essa aba é `Ctrl+Shift+D` ou no Mac `Cmd+Shift+D`. Caso não seja o seu comando padrão você pode se basear [nessa](https://code.visualstudio.com/Docs/editor/debugging) documentação oficial.
+
+Selecione a opção `Connect to server` e clique no botão de Play.
+![Run and debug tutorial](.github/images/run_and_debug.png)
+
 ## Como Usar
 
    Para acessar a aplicação:
