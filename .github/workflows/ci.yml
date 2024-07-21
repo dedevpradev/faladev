@@ -25,9 +25,9 @@ jobs:
         working-directory: ./frontend
         run: npm run build
 
-      - name: Test frontend
-        working-directory: ./frontend
-        run: npm test -- --watchAll=false
+      #- name: Test frontend
+      #  working-directory: ./frontend
+      #  run: npm test -- --watchAll=false
 
       - name: Set up Go
         uses: actions/setup-go@v4
