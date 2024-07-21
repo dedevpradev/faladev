@@ -15,10 +15,12 @@ import (
 
 func FormHandler(c *gin.Context) {
 	tmpl, err := template.ParseFiles("templates/web/form.html")
+
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, fmt.Errorf("error parsing template: %v", err))
 		return
 	}
+	
 	tmpl.Execute(c.Writer, nil)
 }
 
