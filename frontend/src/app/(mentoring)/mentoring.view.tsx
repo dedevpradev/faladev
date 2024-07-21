@@ -1,9 +1,11 @@
+import Image from 'next/image'
+
 export function MentoringView() {
 	return (
 		<main className="flex items-center justify-center h-screen">
 			<div className="w-full max-w-xs">
 				<header className="flex justify-center items-center space-x-4 w-full text-center pb-4">
-					<img src="static/imgs/faladev.jpg" alt="" height="50" width="200" />
+					<Image src="/static/imgs/faladev.jpg" alt="" height="50" width="200" />
 				</header>
 				<form className="mt-5 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
 					<div className="mb-4">
@@ -54,11 +56,11 @@ export function MentoringView() {
 				<hr className="mb-10" />
 				<footer className="flex justify-center items-center space-x-4 w-full text-center pb-4">
 					<a href="https://www.instagram.com/faladev.tech/" target="_blank" className="flex items-center space-x-2">
-						<img src="static/imgs/instagram.svg" alt="Instagram FalaDev" style={{ height: '20px' }} />
+						<Image src="static/imgs/instagram.svg" alt="Instagram FalaDev" width={25} height={25} />
 						<span className="text-xs">@faladev.tech</span>
 					</a>
 					<a href="https://www.youtube.com/@FalaDev" target="_blank" className="flex items-center space-x-2">
-						<img src="static/imgs/youtube.svg" alt="YouTube FalaDev" style={{ height: '30px' }} />
+						<Image src="/static/imgs/youtube.svg" alt="YouTube FalaDev" width={35} height={35} />
 						<span className="text-xs">@FalaDev</span>
 					</a>
 					<a
@@ -66,7 +68,7 @@ export function MentoringView() {
 						target="_blank"
 						className="flex items-center space-x-2"
 					>
-						<img src="static/imgs/whatsapp.svg" alt="WhatsApp FalaDev" style={{ height: '30px' }} />
+						<Image src="/static/imgs/whatsapp.svg" alt="WhatsApp FalaDev" width={30} height={30} />
 						<span className="text-xs">@FalaDev</span>
 					</a>
 				</footer>
