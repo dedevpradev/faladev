@@ -1,4 +1,4 @@
-FROM node:14-alpine as frontend
+FROM node:20-alpine as frontend
 
 WORKDIR /app
 COPY ./frontend .
@@ -16,7 +16,7 @@ COPY ./backend/go.mod ./backend/go.sum ./
 RUN go mod download
 COPY ./backend .
 
-COPY --from=frontend /app/build ./frontend/build
+COPY --from=frontend /app/.next ./frontend/.next
 
 COPY entrypoint.sh /app/
 
