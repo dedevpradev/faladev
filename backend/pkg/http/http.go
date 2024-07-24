@@ -1,5 +1,24 @@
 package http
 
+import (
+	"context"
+	docs "faladev/cmd/docs"
+	"faladev/config"
+	"faladev/internal/auth"
+	"faladev/internal/models"
+	"faladev/internal/services"
+	"fmt"
+	"html/template"
+	"net/http"
+	"os"
+
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	"golang.org/x/oauth2"
+
+	"github.com/gin-gonic/gin"
+)
+
 type ErrorResponse struct {
 	Error string
 }
