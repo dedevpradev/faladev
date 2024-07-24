@@ -27,7 +27,7 @@ func GetEventGoogleMeet() string {
 	return meetEvent
 }
 
-func SetupOAuthConfig() *oauth2.Config { // Função que lê as variáveis de ambiente e retorna um ponteiro para uma configuração OAuth2
+func SetupOAuthConfig() *oauth2.Config {
 
 	err := godotenv.Load()
 

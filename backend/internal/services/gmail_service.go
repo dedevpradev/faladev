@@ -19,14 +19,14 @@ type GmailService struct {
 	token  *oauth2.Token
 }
 
-func NewGmailService(config *oauth2.Config, token *oauth2.Token) EmailService { // Construtor responsável por encapsular a criação de uma instância de GmailService e retornar um ponteiro para ela
+func NewGmailService(config *oauth2.Config, token *oauth2.Token) EmailService {
 	return &GmailService{
 		config: config,
 		token:  token,
 	}
 }
 
-func (gs *GmailService) SendMentorshipInvitation(recipient string, eventDetails *calendar.Event, token *oauth2.Token) error { // Método que envia um convite de mentoria por e-mail
+func (gs *GmailService) SendMentorshipInvitation(recipient string, eventDetails *calendar.Event, token *oauth2.Token) error {
 
 	ctx := context.Background()
 	client := gs.config.Client(ctx, token)

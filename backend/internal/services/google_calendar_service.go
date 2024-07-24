@@ -12,13 +12,13 @@ import (
 	"google.golang.org/api/option"
 )
 
-type GoogleCalendarService struct{} // Estrutura que implementa a interface CalendarService
+type GoogleCalendarService struct{}
 
-func NewGoogleCalendarService() CalendarService { // Construtor responsável por encapsular a criação de uma instância de GoogleCalendarService e retornar um ponteiro para ela
+func NewGoogleCalendarService() CalendarService {
 	return &GoogleCalendarService{}
 }
 
-func (gcs *GoogleCalendarService) InitializeService(ctx context.Context, config *oauth2.Config, token *oauth2.Token) (CalendarAPI, error) { // Método que inicializa o serviço de calendário
+func (gcs *GoogleCalendarService) InitializeService(ctx context.Context, config *oauth2.Config, token *oauth2.Token) (CalendarAPI, error) {
 
 	client, err := auth.CreateOAuthClient(ctx, config, token)
 
@@ -34,7 +34,7 @@ func (gcs *GoogleCalendarService) InitializeService(ctx context.Context, config 
 	return &RealCalendarService{GoogleCalendar: service}, nil
 }
 
-func (gcs *GoogleCalendarService) FindEventByHangoutLink(ctx context.Context, api CalendarAPI, hangoutLink string) (*calendar.Event, error) { // Método que recebe um link do Google Meet e retorna o evento correspondente
+func (gcs *GoogleCalendarService) FindEventByHangoutLink(ctx context.Context, api CalendarAPI, hangoutLink string) (*calendar.Event, error) {
 
 	events, err := api.EventsList("primary").Do()
 
@@ -51,7 +51,7 @@ func (gcs *GoogleCalendarService) FindEventByHangoutLink(ctx context.Context, ap
 	return nil, fmt.Errorf("event with HangoutLink %s not found", hangoutLink)
 }
 
-func (gcs *GoogleCalendarService) AddGuestToEvent(ctx context.Context, api CalendarAPI, hangoutLink, email string) (*calendar.Event, error) { // Método que adiciona um convidado a um evento
+func (gcs *GoogleCalendarService) AddGuestToEvent(ctx context.Context, api CalendarAPI, hangoutLink, email string) (*calendar.Event, error) {
 
 	eventDetails, err := gcs.FindEventByHangoutLink(ctx, api, hangoutLink)
 

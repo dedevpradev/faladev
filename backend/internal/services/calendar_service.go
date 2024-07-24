@@ -7,7 +7,7 @@ import (
 	"google.golang.org/api/calendar/v3"
 )
 
-type CalendarService interface { // Interface que define os métodos que devem ser implementados por um serviço de calendário
+type CalendarService interface {
 	InitializeService(ctx context.Context, config *oauth2.Config, token *oauth2.Token) (CalendarAPI, error)
 	AddGuestToEvent(ctx context.Context, service CalendarAPI, hangoutLink, email string) (*calendar.Event, error)
 	FindEventByHangoutLink(ctx context.Context, service CalendarAPI, hangoutLink string) (*calendar.Event, error)
