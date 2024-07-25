@@ -13,7 +13,7 @@ import (
 
 func main() {
 
-	config.SetupOAuthConfig()
+	oauthConfig := config.SetupOAuthConfig()
 
 	token, err := models.LoadToken()
 
@@ -23,8 +23,14 @@ func main() {
 
 	if token == nil {
 		log.Println("Token not found, redirecting to authentication...")
-		fmt.Println("Please visit the following link to authorize your Google account: ", config.OAuthConfig.AuthCodeURL("state-token", oauth2.AccessTypeOffline))
+		fmt.Println("Please visit the following link to authorize your Google account: ", oauthConfig.AuthCodeURL("state-token", oauth2.AccessTypeOffline))
 	}
 
-	http.StartServer()
+	appAuthConfig := config.AuthConfig{
+		Config: oauthConfig,
+		Token:  token,
+	}
+
+	http.StartServer(appAuthConfig)
+
 }
