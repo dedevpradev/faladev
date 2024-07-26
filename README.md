@@ -130,7 +130,7 @@ Instale o pacote golang `swag`:
 Vá para a pasta backend e rode o seguinte comando:
 
    ```bash
-   swag init -g ./cmd/api/main.go -o cmd/docs
+   path/to/the/go/bin/swag init -g ./cmd/api/main.go -o cmd/docs
    ```
 
 ![Run and debug tutorial](.github/images/run_and_debug.png)

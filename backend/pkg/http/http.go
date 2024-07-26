@@ -42,7 +42,7 @@ func NewApp(config *oauth2.Config, calendar services.CalendarService, email serv
 // @Description Renders the form.html page to display user information form.
 // @Produce html
 // @Success 200 {string} html "HTML content of the form page"
-// @Router /form [get]
+// @Router / [get]
 func (app *App) FormHandler(c *gin.Context) {
 
 	tmpl, err := template.ParseFiles("templates/web/form.html")
@@ -66,7 +66,7 @@ func (app *App) FormHandler(c *gin.Context) {
 // @Success 303 {string} string "Redirects to Google Meet link"
 // @Failure 400 {object} ErrorResponse "No Google Meet link available or other errors"
 // @Failure 500 {object} ErrorResponse "Internal server error"
-// @Router /event-handler [post]
+// @Router /event [post]
 func (app *App) EventHandler(c *gin.Context) {
 
 	name := c.PostForm("name")
@@ -140,7 +140,7 @@ func (app *App) EventHandler(c *gin.Context) {
 // @Success 303  "Redirects to /"
 // @Failure 400 {object} ErrorResponse "State token doesn't match"
 // @Failure 500 {object} ErrorResponse "Unable to retrieve or save token"
-// @Router /oauth/callback [get]
+// @Router /callback [get]
 func (app *App) OAuthCallbackHandler(c *gin.Context) {
 
 	if c.Query("state") != "state-token" {
