@@ -1,8 +1,22 @@
 {
     "swagger": "2.0",
     "info": {
-        "contact": {}
+        "description": "Esta é uma API exemplo do Faladev, que integra com o Google Calendar e o Gmail.",
+        "title": "Faladev API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "Suporte da API Faladev",
+            "url": "http://www.faladev.com/support",
+            "email": "support@faladev.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
     },
+    "host": "localhost:8080",
+    "basePath": "/",
     "paths": {
         "/": {
             "get": {
@@ -131,5 +145,9 @@
                 }
             }
         }
+    },
+    "externalDocs": {
+        "description": "OpenAPI Specification",
+        "url": "https://swagger.io/resources/open-api/"
     }
 }

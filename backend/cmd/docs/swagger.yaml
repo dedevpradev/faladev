@@ -1,11 +1,27 @@
+basePath: /
 definitions:
   http.ErrorResponse:
     properties:
       error:
         type: string
     type: object
+externalDocs:
+  description: OpenAPI Specification
+  url: https://swagger.io/resources/open-api/
+host: localhost:8080
 info:
-  contact: {}
+  contact:
+    email: support@faladev.com
+    name: Suporte da API Faladev
+    url: http://www.faladev.com/support
+  description: Esta é uma API exemplo do Faladev, que integra com o Google Calendar
+    e o Gmail.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Faladev API
+  version: "1.0"
 paths:
   /:
     get:
