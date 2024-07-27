@@ -4,6 +4,7 @@ import (
 	"context"
 	docs "faladev/cmd/docs"
 	"faladev/internal/auth"
+	"faladev/internal/models"
 	"faladev/internal/services"
 	"fmt"
 	"html/template"
@@ -13,6 +14,7 @@ import (
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"golang.org/x/oauth2"
+	"google.golang.org/api/calendar/v3"
 
 	"github.com/gin-gonic/gin"
 )
@@ -73,71 +75,102 @@ func (app *App) FormHandler(c *gin.Context) {
 // @Router /event [post]
 func (app *App) EventHandler(c *gin.Context) {
 
-	name := c.PostForm("name")
-	email := c.PostForm("email")
-	phone := c.PostForm("phone")
+	name, email, phone := c.PostForm("name"), c.PostForm("email"), c.PostForm("phone")
 
-	if err := app.studentService.InsertOrUpdateStudent(name, email, phone); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error inserting record into database: " + err.Error()})
+	if err := app.insertOrUpdateStudent(name, email, phone); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	token, err := app.tokenService.GetToken()
+	token, err := app.validateOrRefreshToken(c.Request.Context())
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to load token: " + err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	if !token.Valid() {
-
-		token, err = auth.RefreshToken(c.Request.Context(), app.config, token)
-
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to refresh token: " + err.Error()})
-			return
-		}
-
-		err = app.tokenService.CreateToken(token)
-
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save token: " + err.Error()})
-			return
-		}
-	}
-
-	calendarService, err := app.calendarService.InitializeService(context.Background(), app.config, token)
+	eventDetails, err := app.addGuestToNextEvent(c.Request.Context(), email, token)
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error initializing Google Calendar service: " + err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	event, err := app.eventService.GetNextEvent()
-
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error getting next event: " + err.Error()})
-		return
-	}
-
-	eventDetails, err := app.calendarService.AddGuestToEvent(context.Background(), calendarService, event.Location, email)
-
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error getting event details: " + err.Error()})
-		return
-	}
-
-	if err = app.emailService.SendMentorshipInvitation(email, eventDetails, token); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to send email: " + err.Error()})
-		return
-	}
-
-	if eventDetails.HangoutLink == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "No Google Meet link available for this event"})
+	if err := app.sendInvite(email, eventDetails, token); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
 	c.Redirect(http.StatusSeeOther, eventDetails.HangoutLink)
+}
+
+func (app *App) insertOrUpdateStudent(name, email, phone string) error {
+	if err := app.studentService.InsertOrUpdateStudent(name, email, phone); err != nil {
+		return fmt.Errorf("error inserting record into database: %w", err)
+	}
+	return nil
+}
+
+func (app *App) validateOrRefreshToken(ctx context.Context) (*oauth2.Token, error) {
+	token, err := app.tokenService.ValidateOrRefreshToken(ctx, app.config)
+	if err != nil {
+		return nil, fmt.Errorf("failed to ensure valid token: %w", err)
+	}
+	return token, nil
+}
+
+func (app *App) initializeCalendarService(ctx context.Context, token *oauth2.Token) (*services.CalendarAPI, error) {
+	calendarService, err := app.calendarService.InitializeService(ctx, app.config, token)
+	if err != nil {
+		return nil, fmt.Errorf("error initializing Google Calendar service: %w", err)
+	}
+	return &calendarService, nil
+}
+
+func (app *App) getNextEvent(ctx context.Context) (*models.Event, error) {
+	event, err := app.eventService.GetNextEvent()
+	if err != nil {
+		return nil, fmt.Errorf("error getting next event: %w", err)
+	}
+	return event, nil
+}
+
+func (app *App) addGuestToEvent(ctx context.Context, calendarService *services.CalendarAPI, eventLocation, email string) (*calendar.Event, error) {
+	eventDetails, err := app.calendarService.AddGuestToEvent(ctx, *calendarService, eventLocation, email)
+	if err != nil {
+		return nil, fmt.Errorf("error adding guest to event: %w", err)
+	}
+	return eventDetails, nil
+}
+
+func (app *App) addGuestToNextEvent(ctx context.Context, email string, token *oauth2.Token) (*calendar.Event, error) {
+
+	calendarService, err := app.initializeCalendarService(ctx, token)
+
+	if err != nil {
+		return nil, err
+	}
+
+	event, err := app.getNextEvent(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	eventDetails, err := app.addGuestToEvent(ctx, calendarService, event.Location, email)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return eventDetails, nil
+}
+
+func (app *App) sendInvite(email string, eventDetails *calendar.Event, token *oauth2.Token) error {
+	if err := app.emailService.SendInvite(email, eventDetails, token); err != nil {
+		return fmt.Errorf("failed to send email: %w", err)
+	}
+	return nil
 }
 
 // OAuthCallbackHandler handles the OAuth2 callback endpoint.
