@@ -6,5 +6,5 @@ import (
 )
 
 type EmailService interface {
-	SendMentorshipInvitation(recipient string, eventDetails *calendar.Event, token *oauth2.Token) error
+	SendInvite(recipient string, eventDetails *calendar.Event, token *oauth2.Token) error
 }
