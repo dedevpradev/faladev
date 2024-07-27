@@ -3,9 +3,7 @@ package http
 import (
 	"context"
 	docs "faladev/cmd/docs"
-	"faladev/config"
 	"faladev/internal/auth"
-	"faladev/internal/models"
 	"faladev/internal/services"
 	"fmt"
 	"html/template"
@@ -27,13 +25,19 @@ type App struct {
 	config          *oauth2.Config
 	calendarService services.CalendarService
 	emailService    services.EmailService
+	studentService  services.StudentService
+	tokenService    services.TokenService
+	eventService    services.EventService
 }
 
-func NewApp(config *oauth2.Config, calendar services.CalendarService, email services.EmailService) *App {
+func NewApp(config *oauth2.Config, calendar services.CalendarService, email services.EmailService, studentService services.StudentService, tokenService services.TokenService, eventService services.EventService) *App {
 	return &App{
 		config:          config,
 		calendarService: calendar,
 		emailService:    email,
+		studentService:  studentService,
+		tokenService:    tokenService,
+		eventService:    eventService,
 	}
 }
 
@@ -73,12 +77,12 @@ func (app *App) EventHandler(c *gin.Context) {
 	email := c.PostForm("email")
 	phone := c.PostForm("phone")
 
-	if err := models.InsertOrUpdateStudent(name, email, phone); err != nil {
+	if err := app.studentService.InsertOrUpdateStudent(name, email, phone); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error inserting record into database: " + err.Error()})
 		return
 	}
 
-	token, err := models.LoadToken()
+	token, err := app.tokenService.GetToken()
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to load token: " + err.Error()})
@@ -94,7 +98,7 @@ func (app *App) EventHandler(c *gin.Context) {
 			return
 		}
 
-		err = models.SaveToken(token)
+		err = app.tokenService.CreateToken(token)
 
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save token: " + err.Error()})
@@ -109,8 +113,14 @@ func (app *App) EventHandler(c *gin.Context) {
 		return
 	}
 
-	eventID := config.GetEventGoogleMeet()
-	eventDetails, err := app.calendarService.AddGuestToEvent(context.Background(), calendarService, eventID, email)
+	event, err := app.eventService.GetNextEvent()
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error getting next event: " + err.Error()})
+		return
+	}
+
+	eventDetails, err := app.calendarService.AddGuestToEvent(context.Background(), calendarService, event.Location, email)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error getting event details: " + err.Error()})
@@ -159,7 +169,7 @@ func (app *App) OAuthCallbackHandler(c *gin.Context) {
 		return
 	}
 
-	err = models.SaveToken(token)
+	err = app.tokenService.CreateToken(token)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Unable to save token: %v", err)})
@@ -171,9 +181,9 @@ func (app *App) OAuthCallbackHandler(c *gin.Context) {
 	c.Redirect(http.StatusSeeOther, "/")
 }
 
-func StartServer(appAuthConfig config.AuthConfig) {
+func StartServer(appOAuth2Config *oauth2.Config, studentService services.StudentService, calendarService services.CalendarService, emailService services.EmailService, tokenService services.TokenService, eventService services.EventService) {
 
-	app := NewApp(appAuthConfig.Config, services.NewGoogleCalendarService(), services.NewGmailService(appAuthConfig.Config, appAuthConfig.Token))
+	app := NewApp(appOAuth2Config, calendarService, emailService, studentService, tokenService, eventService)
 
 	router := gin.Default()
 
