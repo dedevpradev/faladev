@@ -2,7 +2,6 @@ package repository
 
 import (
 	"faladev/internal/models"
-	"time"
 
 	"gorm.io/gorm"
 )
@@ -49,7 +48,11 @@ func (r *EventRepository) ListEvents() ([]models.Event, error) {
 
 func (r *EventRepository) GetNextEvent() (*models.Event, error) {
 	var event models.Event
-	err := r.db.Where("start_date >= ?", time.Now()).Order("start_date, start_time").Debug().First(&event).Error
+	err := r.db.
+		//Where("start_date >= ?", time.Now()).
+		Order("start_date, start_time").
+		Debug().
+		First(&event).Error
 	if err != nil {
 		return nil, err
 	}
