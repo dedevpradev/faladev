@@ -2,23 +2,40 @@ package services
 
 import (
 	"bytes"
+	"context"
 	"faladev/pkg/utils"
 	"fmt"
 	"html/template"
 	"log"
-	"net/http"
 
 	"golang.org/x/oauth2"
 	"google.golang.org/api/calendar/v3"
 	"google.golang.org/api/gmail/v1"
+	"google.golang.org/api/option"
 )
 
-func SendMailMentorship(recipient string, eventDetails *calendar.Event, tok *oauth2.Token, client *http.Client) error {
+type GmailService struct {
+	config *oauth2.Config
+	token  *oauth2.Token
+}
 
-	srv, err := gmail.New(client)
+func NewGmailService(config *oauth2.Config, token *oauth2.Token) EmailService {
+	return &GmailService{
+		config: config,
+		token:  token,
+	}
+}
+
+func (gs *GmailService) SendMentorshipInvitation(recipient string, eventDetails *calendar.Event, token *oauth2.Token) error {
+
+	ctx := context.Background()
+	client := gs.config.Client(ctx, token)
+
+	srv, err := gmail.NewService(ctx, option.WithHTTPClient(client))
 
 	if err != nil {
 		log.Fatalf("Unable to retrieve Gmail client: %v", err)
+		return fmt.Errorf("Unable to retrieve Gmail client: %v", err)
 	}
 
 	emailTo := recipient

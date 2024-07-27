@@ -62,7 +62,7 @@ Este projeto é uma aplicação Go que integra com o Google Calendar e tem permi
 
 4. **Configurar Variáveis de Ambiente:**
 
-   Crie um arquivo .env na raiz do projeto e adicione as seguintes variáveis, incluindo suas credenciais do Google:
+   Crie um arquivo .env no diretório ./backend e adicione as seguintes variáveis, incluindo suas credenciais do Google:
 
    ```env
    GOOGLE_MEET_EVENT=https://meet.google.com/link-do-meet-do-evento
@@ -118,6 +118,23 @@ O comando padrão para acessar essa aba é `Ctrl+Shift+D` ou no Mac `Cmd+Shift+D
 Selecione a opção `Connect to server` e clique no botão de Play.
 ![Run and debug tutorial](.github/images/run_and_debug.png)
 
+
+## Como atualizar a documentação Swagger?
+
+Instale o pacote golang `swag`:
+
+   ```bash
+  go install github.com/swaggo/swag/cmd/swag@latest 
+   ```
+
+Vá para a pasta backend e rode o seguinte comando:
+
+   ```bash
+   swag init -g ./cmd/api/main.go -o cmd/docs
+   ```
+
+![Run and debug tutorial](.github/images/run_and_debug.png)
+
 ## Como Usar
 
    Para acessar a aplicação:
@@ -142,5 +159,11 @@ Selecione a opção `Connect to server` e clique no botão de Play.
 
    ```bash
    http://localhost:5050/
+   ```
+
+   Para acessar a documentação swagger:
+
+   ```bash
+   http://localhost:8080/swagger/index.html
    ```
 
