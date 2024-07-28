@@ -1,19 +1,19 @@
 package services
 
-import (
-	"faladev/internal/repository"
-)
-
-type StudentService struct {
-	repo *repository.StudentRepository
+type StudentRepository interface {
+	InsertOrUpdateStudent(name, email, phone string) error
 }
 
-func NewStudentService(repo *repository.StudentRepository) *StudentService {
+type StudentService struct {
+	repo StudentRepository
+}
+
+func NewStudentService(repo StudentRepository) *StudentService {
 	return &StudentService{
 		repo: repo,
 	}
 }
 
-func (s *StudentService) InsertOrUpdateStudent(name, email, phone string) error {
-	return s.repo.InsertOrUpdateStudent(name, email, phone)
+func (studentService *StudentService) InsertOrUpdateStudent(name, email, phone string) error {
+	return studentService.repo.InsertOrUpdateStudent(name, email, phone)
 }

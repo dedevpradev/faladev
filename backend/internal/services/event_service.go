@@ -2,39 +2,50 @@ package services
 
 import (
 	"faladev/internal/models"
-	"faladev/internal/repository"
 )
 
+type EventRepository interface {
+	CreateEvent(event *models.Event) error
+	GetEventByID(id uint) (*models.Event, error)
+	UpdateEvent(event *models.Event) error
+	DeleteEvent(id uint) error
+	ListEvents() ([]models.Event, error)
+	GetNextEvent() (*models.Event, error)
+	CountEvents() (int64, error)
+}
+
 type EventService struct {
-	repo *repository.EventRepository
+	repo EventRepository
 }
 
-func NewEventService(repo *repository.EventRepository) *EventService {
-	return &EventService{
-		repo: repo,
-	}
+func NewEventService(repo EventRepository) *EventService {
+	return &EventService{repo: repo}
 }
 
-func (s *EventService) CreateEvent(event *models.Event) error {
-	return s.repo.CreateEvent(event)
+func (eventService *EventService) CreateEvent(event *models.Event) error {
+	return eventService.repo.CreateEvent(event)
 }
 
-func (s *EventService) GetEventByID(id uint) (*models.Event, error) {
-	return s.repo.GetEventByID(id)
+func (eventService *EventService) GetEventByID(id uint) (*models.Event, error) {
+	return eventService.repo.GetEventByID(id)
 }
 
-func (s *EventService) UpdateEvent(event *models.Event) error {
-	return s.repo.UpdateEvent(event)
+func (eventService *EventService) UpdateEvent(event *models.Event) error {
+	return eventService.repo.UpdateEvent(event)
 }
 
-func (s *EventService) DeleteEvent(id uint) error {
-	return s.repo.DeleteEvent(id)
+func (eventService *EventService) DeleteEvent(id uint) error {
+	return eventService.repo.DeleteEvent(id)
 }
 
-func (s *EventService) ListEvents() ([]models.Event, error) {
-	return s.repo.ListEvents()
+func (eventService *EventService) ListEvents() ([]models.Event, error) {
+	return eventService.repo.ListEvents()
 }
 
-func (s *EventService) GetNextEvent() (*models.Event, error) {
-	return s.repo.GetNextEvent()
+func (eventService *EventService) GetNextEvent() (*models.Event, error) {
+	return eventService.repo.GetNextEvent()
+}
+
+func (eventService *EventService) CountEvents() (int64, error) {
+	return eventService.repo.CountEvents()
 }

@@ -6,62 +6,56 @@ import (
 	"testing"
 
 	"github.com/pkg/errors"
-	log "github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/api/calendar/v3"
 )
 
-func TestFindEventByHangoutLink(t *testing.T) {
+func TestFindEventByKey(t *testing.T) {
 	tests := []struct {
 		name          string
-		hangoutLink   string
-		mockDoFunc    func() (*calendar.Events, error)
+		eventKey      string
+		mockDoFunc    func() (*calendar.Event, error)
 		expectedEvent *calendar.Event
 		expectedError string
 	}{
 		{
-			name:        "Event Found",
-			hangoutLink: "https://meet.google.com/xxx-yyyy-zzz",
-			mockDoFunc: func() (*calendar.Events, error) {
-				return &calendar.Events{
-					Items: []*calendar.Event{
-						{HangoutLink: "https://meet.google.com/xxx-yyyy-zzz"},
-					},
-				}, nil
+			name:     "Event Found",
+			eventKey: "04mti3liihmd9u2agf8hg7kf6u",
+			mockDoFunc: func() (*calendar.Event, error) {
+				return &calendar.Event{Id: "04mti3liihmd9u2agf8hg7kf6u"}, nil
 			},
-			expectedEvent: &calendar.Event{HangoutLink: "https://meet.google.com/xxx-yyyy-zzz"},
+			expectedEvent: &calendar.Event{Id: "04mti3liihmd9u2agf8hg7kf6u"},
 			expectedError: "",
 		},
 		{
-			name:        "Event Not Found",
-			hangoutLink: "https://meet.google.com/non-existent",
-			mockDoFunc: func() (*calendar.Events, error) {
-				return &calendar.Events{
-					Items: []*calendar.Event{
-						{HangoutLink: "https://meet.google.com/xxx-yyyy-zzz"},
-					},
-				}, nil
+			name:     "Event Not Found",
+			eventKey: "https://meet.google.com/non-existent",
+			mockDoFunc: func() (*calendar.Event, error) {
+				return nil, errors.New("event not found")
 			},
 			expectedEvent: nil,
-			expectedError: "event with HangoutLink https://meet.google.com/non-existent not found",
+			expectedError: "error fetching event with eventKey https://meet.google.com/non-existent: event not found",
 		},
 		{
-			name:        "API Error",
-			hangoutLink: "https://meet.google.com/xxx-yyyy-zzz",
-			mockDoFunc: func() (*calendar.Events, error) {
+			name:     "API Error",
+			eventKey: "04mti3liihmd9u2agf8hg7kf6u",
+			mockDoFunc: func() (*calendar.Event, error) {
 				return nil, errors.New("API error")
 			},
 			expectedEvent: nil,
-			expectedError: "error listing events: API error",
+			expectedError: "error fetching event with eventKey 04mti3liihmd9u2agf8hg7kf6u: API error",
 		},
 	}
 
 	for _, tt := range tests {
 
 		t.Run(tt.name, func(t *testing.T) {
+
 			mockService := &FakeCalendarService{
-				EventsListMock: func(calendarID string) services.EventsListCall {
-					return &FakeEventsListCall{
+				GetEventMock: func(calendarID, eventID string) services.EventCall {
+					assert.Equal(t, "primary", calendarID)
+					assert.Equal(t, tt.eventKey, eventID)
+					return &FakeEventCall{
 						DoFunc: tt.mockDoFunc,
 					}
 				},
@@ -69,11 +63,9 @@ func TestFindEventByHangoutLink(t *testing.T) {
 
 			gcs := services.GoogleCalendarService{}
 
-			event, err := gcs.FindEventByHangoutLink(context.Background(), mockService, tt.hangoutLink)
+			event, err := gcs.FindEventByKey(context.Background(), mockService, tt.eventKey)
 
 			if tt.expectedError != "" {
-				log.Infof("Error: %v", err)
-				log.Info("Event: ", event)
 				assert.EqualError(t, err, tt.expectedError)
 				assert.Error(t, err)
 				assert.Nil(t, event)
@@ -83,5 +75,4 @@ func TestFindEventByHangoutLink(t *testing.T) {
 			}
 		})
 	}
-
 }

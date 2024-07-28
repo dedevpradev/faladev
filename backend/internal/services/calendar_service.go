@@ -9,8 +9,8 @@ import (
 
 type CalendarService interface {
 	InitializeService(ctx context.Context, config *oauth2.Config, token *oauth2.Token) (CalendarAPI, error)
-	AddGuestToEvent(ctx context.Context, service CalendarAPI, hangoutLink, email string) (*calendar.Event, error)
-	FindEventByHangoutLink(ctx context.Context, service CalendarAPI, hangoutLink string) (*calendar.Event, error)
+	AddGuestToEvent(ctx context.Context, service CalendarAPI, eventKey, email string) (*calendar.Event, error)
+	FindEventByKey(ctx context.Context, service CalendarAPI, eventKey string) (*calendar.Event, error)
 }
 
 type CalendarAPI interface {
