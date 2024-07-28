@@ -6,7 +6,6 @@ import (
 	"fmt"
 
 	"github.com/pkg/errors"
-	log "github.com/sirupsen/logrus"
 	"golang.org/x/oauth2"
 	"google.golang.org/api/calendar/v3"
 	"google.golang.org/api/option"
@@ -18,7 +17,7 @@ func NewGoogleCalendarService() CalendarService {
 	return &GoogleCalendarService{}
 }
 
-func (gcs *GoogleCalendarService) InitializeService(ctx context.Context, config *oauth2.Config, token *oauth2.Token) (CalendarAPI, error) {
+func (googleCalendarService *GoogleCalendarService) InitializeService(ctx context.Context, config *oauth2.Config, token *oauth2.Token) (CalendarAPI, error) {
 
 	client, err := auth.CreateOAuthClient(ctx, config, token)
 
@@ -34,26 +33,20 @@ func (gcs *GoogleCalendarService) InitializeService(ctx context.Context, config 
 	return &RealCalendarService{GoogleCalendar: service}, nil
 }
 
-func (gcs *GoogleCalendarService) FindEventByHangoutLink(ctx context.Context, api CalendarAPI, hangoutLink string) (*calendar.Event, error) {
+func (googleCalendarService *GoogleCalendarService) FindEventByKey(ctx context.Context, api CalendarAPI, eventKey string) (*calendar.Event, error) {
 
-	events, err := api.EventsList("primary").Do()
+	event, err := api.GetEvent("primary", eventKey).Do()
 
 	if err != nil {
-		return nil, errors.Wrap(err, "error listing events")
+		return nil, errors.Wrap(err, fmt.Sprintf("error fetching event with eventKey %s", eventKey))
 	}
 
-	for _, event := range events.Items {
-		if event.HangoutLink == hangoutLink {
-			return event, nil
-		}
-	}
-
-	return nil, fmt.Errorf("event with HangoutLink %s not found", hangoutLink)
+	return event, nil
 }
 
-func (gcs *GoogleCalendarService) AddGuestToEvent(ctx context.Context, api CalendarAPI, hangoutLink, email string) (*calendar.Event, error) {
+func (googleCalendarService *GoogleCalendarService) AddGuestToEvent(ctx context.Context, api CalendarAPI, hangoutLink, email string) (*calendar.Event, error) {
 
-	eventDetails, err := gcs.FindEventByHangoutLink(ctx, api, hangoutLink)
+	eventDetails, err := googleCalendarService.FindEventByKey(ctx, api, hangoutLink)
 
 	if err != nil {
 		return nil, err
@@ -67,7 +60,6 @@ func (gcs *GoogleCalendarService) AddGuestToEvent(ctx context.Context, api Calen
 
 	for _, attendee := range updatedEvent.Attendees {
 		if attendee.Email == email {
-			log.Infof("Guest %s is already in the event %s - Meet: %s\n", email, eventDetails.Id, hangoutLink)
 			return updatedEvent, nil
 		}
 	}
@@ -81,8 +73,6 @@ func (gcs *GoogleCalendarService) AddGuestToEvent(ctx context.Context, api Calen
 	if err != nil {
 		return nil, errors.Wrap(err, "error adding guest to event")
 	}
-
-	log.Infof("Guest %s added to the event %s - Meet: %s\n", email, eventDetails.Id, hangoutLink)
 
 	return updatedEvent, nil
 }
