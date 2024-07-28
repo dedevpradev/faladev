@@ -101,7 +101,7 @@ func (app *App) EventHandler(c *gin.Context) {
 		return
 	}
 
-	c.Redirect(http.StatusSeeOther, eventDetails.HangoutLink)
+	c.Redirect(http.StatusSeeOther, eventDetails.Location)
 }
 
 func (app *App) insertOrUpdateStudent(name, email, phone string) error {
@@ -127,7 +127,7 @@ func (app *App) initializeCalendarService(ctx context.Context, token *oauth2.Tok
 	return &calendarService, nil
 }
 
-func (app *App) getNextEvent(ctx context.Context) (*models.Event, error) {
+func (app *App) getNextEvent() (*models.Event, error) {
 	event, err := app.eventService.GetNextEvent()
 	if err != nil {
 		return nil, fmt.Errorf("error getting next event: %w", err)
@@ -135,15 +135,15 @@ func (app *App) getNextEvent(ctx context.Context) (*models.Event, error) {
 	return event, nil
 }
 
-func (app *App) addGuestToEvent(ctx context.Context, calendarService *services.CalendarAPI, eventLocation, email string) (*calendar.Event, error) {
-	eventDetails, err := app.calendarService.AddGuestToEvent(ctx, *calendarService, eventLocation, email)
+func (app *App) addGuestToEvent(ctx context.Context, calendarService *services.CalendarAPI, eventKey, email string) (*calendar.Event, error) {
+	eventDetails, err := app.calendarService.AddGuestToEvent(ctx, *calendarService, eventKey, email)
 	if err != nil {
 		return nil, fmt.Errorf("error adding guest to event: %w", err)
 	}
 	return eventDetails, nil
 }
 
-func (app *App) addGuestToNextEvent(ctx context.Context, email string, token *oauth2.Token) (*calendar.Event, error) {
+func (app *App) addGuestToNextEvent(ctx context.Context, email string, token *oauth2.Token) (*models.Event, error) {
 
 	calendarService, err := app.initializeCalendarService(ctx, token)
 
@@ -151,22 +151,22 @@ func (app *App) addGuestToNextEvent(ctx context.Context, email string, token *oa
 		return nil, err
 	}
 
-	event, err := app.getNextEvent(ctx)
+	event, err := app.getNextEvent()
 
 	if err != nil {
 		return nil, err
 	}
 
-	eventDetails, err := app.addGuestToEvent(ctx, calendarService, event.Location, email)
+	_, err = app.addGuestToEvent(ctx, calendarService, event.Key, email)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return eventDetails, nil
+	return event, nil
 }
 
-func (app *App) sendInvite(email string, eventDetails *calendar.Event, token *oauth2.Token) error {
+func (app *App) sendInvite(email string, eventDetails *models.Event, token *oauth2.Token) error {
 	if err := app.emailService.SendInvite(email, eventDetails, token); err != nil {
 		return fmt.Errorf("failed to send email: %w", err)
 	}
