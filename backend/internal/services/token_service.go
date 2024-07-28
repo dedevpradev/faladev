@@ -3,33 +3,37 @@ package services
 import (
 	"context"
 	"faladev/internal/auth"
-	"faladev/internal/repository"
 	"fmt"
 
 	"golang.org/x/oauth2"
 )
 
-type TokenService struct {
-	repo *repository.TokenRepository
+type TokenRepository interface {
+	CreateToken(token *oauth2.Token) error
+	GetToken() (*oauth2.Token, error)
 }
 
-func NewTokenService(repo *repository.TokenRepository) *TokenService {
+type TokenService struct {
+	repo TokenRepository
+}
+
+func NewTokenService(repo TokenRepository) *TokenService {
 	return &TokenService{
 		repo: repo,
 	}
 }
 
-func (ts *TokenService) CreateToken(token *oauth2.Token) error {
-	return ts.repo.CreateToken(token)
+func (tokenService *TokenService) CreateToken(token *oauth2.Token) error {
+	return tokenService.repo.CreateToken(token)
 }
 
-func (ts *TokenService) GetToken() (*oauth2.Token, error) {
-	return ts.repo.GetToken()
+func (tokenService *TokenService) GetToken() (*oauth2.Token, error) {
+	return tokenService.repo.GetToken()
 }
 
-func (ts *TokenService) ValidateOrRefreshToken(ctx context.Context, config *oauth2.Config) (*oauth2.Token, error) {
+func (tokenService *TokenService) ValidateOrRefreshToken(ctx context.Context, config *oauth2.Config) (*oauth2.Token, error) {
 
-	token, err := ts.GetToken()
+	token, err := tokenService.GetToken()
 
 	if err != nil {
 		return nil, fmt.Errorf("failed to load token: %w", err)
@@ -43,7 +47,7 @@ func (ts *TokenService) ValidateOrRefreshToken(ctx context.Context, config *oaut
 			return nil, fmt.Errorf("failed to refresh token: %w", err)
 		}
 
-		if err := ts.CreateToken(token); err != nil {
+		if err := tokenService.CreateToken(token); err != nil {
 			return nil, fmt.Errorf("failed to save token: %w", err)
 		}
 	}
