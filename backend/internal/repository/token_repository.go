@@ -18,7 +18,7 @@ func NewTokenRepository(db *gorm.DB) *TokenRepository {
 	}
 }
 
-func (r *TokenRepository) CreateToken(token *oauth2.Token) error {
+func (tokenRepository *TokenRepository) CreateToken(token *oauth2.Token) error {
 
 	tokenJSON, err := json.Marshal(token)
 
@@ -30,14 +30,14 @@ func (r *TokenRepository) CreateToken(token *oauth2.Token) error {
 		Token: string(tokenJSON),
 	}
 
-	return r.db.Create(&newToken).Error
+	return tokenRepository.db.Create(&newToken).Error
 }
 
-func (r *TokenRepository) GetToken() (*oauth2.Token, error) {
+func (tokenRepository *TokenRepository) GetToken() (*oauth2.Token, error) {
 
 	var tokenModel models.Token
 
-	err := r.db.Order("created_at desc").First(&tokenModel).Error
+	err := tokenRepository.db.Order("created_at desc").First(&tokenModel).Error
 
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
