@@ -16,29 +16,20 @@ func NewStudentRepository(db *gorm.DB) *StudentRepository {
 	}
 }
 
-func (r *StudentRepository) InsertOrUpdateStudent(name, email, phone string) error {
+func (studentRepository *StudentRepository) InsertOrUpdateStudent(name, email, phone string) error {
 
-	var existingStudent models.Student
+	student := &models.Student{Name: name, Email: email, Phone: phone}
 
-	err := r.db.Where("email = ?", email).First(&existingStudent).Error
+	err := studentRepository.db.Where("email = ?", email).FirstOrCreate(&student).Error
 
 	if err != nil {
-		if err == gorm.ErrRecordNotFound {
-			newStudent := models.Student{
-				Name:  name,
-				Email: email,
-				Phone: phone,
-			}
-			result := r.db.Create(&newStudent)
-			return result.Error
-		}
 		return err
 	}
 
-	existingStudent.Name = name
-	existingStudent.Phone = phone
+	student.Name = name
+	student.Phone = phone
 
-	result := r.db.Save(&existingStudent)
+	result := studentRepository.db.Save(&student)
 
 	return result.Error
 }
