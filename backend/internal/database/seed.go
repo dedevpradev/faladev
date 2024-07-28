@@ -2,6 +2,8 @@ package database
 
 import (
 	"faladev/internal/models"
+	"faladev/internal/repository"
+	"faladev/internal/services"
 	"log"
 	"time"
 
@@ -9,14 +11,21 @@ import (
 )
 
 func Seed(db *gorm.DB) {
-	seedEvents(db)
+
+	eventRepo := repository.NewEventRepository(db)
+
+	eventService := services.NewEventService(eventRepo)
+
+	seedEvents(eventService)
 }
 
-func seedEvents(db *gorm.DB) {
+func seedEvents(eventService *services.EventService) {
 
-	var eventCount int64
+	eventCount, err := eventService.CountEvents()
 
-	db.Model(&models.Event{}).Count(&eventCount)
+	if err != nil {
+		log.Fatalf("Failed to count events: %v", err)
+	}
 
 	if eventCount == 0 {
 
@@ -37,7 +46,9 @@ func seedEvents(db *gorm.DB) {
 			CalendarEventLink: "https://www.google.com/calendar/event?eid=MDRtdGkzbGlpaG1kOXUyYWdmOGhnN2tmNnVfMjAyNDA2MTJUMjIwMDAwWiBjb250YXRvQG1hcmNvc2ZvbnNlY2EuY29tLmJy",
 		}
 
-		if err := db.Create(&defaultEvent).Error; err != nil {
+		err = eventService.CreateEvent(&defaultEvent)
+
+		if err != nil {
 			log.Fatalf("Failed to insert default event: %v", err)
 		}
 
