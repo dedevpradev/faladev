@@ -1,0 +1,7 @@
+export const INSTAGRAM_URL = 'https://instagram.com/faladev.tech'
+export const YOUTUBE_URL = 'https://youtube.com/c/FalaDev'
+export const WHATSAPP_URL = 'https://wa.me/123456789'
+export const LOGO_SRC = '/path/to/logo.png'
+export const INSTAGRAM_ICON_SRC = '/path/to/instagram-icon.png'
+export const YOUTUBE_ICON_SRC = '/path/to/youtube-icon.png'
+export const WHATSAPP_ICON_SRC = '/path/to/whatsapp-icon.png'
