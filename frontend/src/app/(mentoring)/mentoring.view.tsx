@@ -1,3 +1,4 @@
+import { Upload } from '@components/upload'
 import Image from 'next/image'
 
 export function MentoringView() {
@@ -72,6 +73,7 @@ export function MentoringView() {
 						<span className="text-xs">@FalaDev</span>
 					</a>
 				</footer>
+				<Upload />
 				<p className="text-xs text-center">
 					Essa é uma mentoria gratuita para quem está entrando na área de tecnologia, migrando de área ou buscando
 					crescimento profissional.
