@@ -28,24 +28,24 @@ type EventCall interface {
 }
 
 type RealCalendarService struct {
-	GoogleCalendar *calendar.Service
+	CalendarService *calendar.Service
 }
 
 func (rcs *RealCalendarService) EventsList(calendarID string) EventsListCall {
 	return &realEventsListCall{
-		call: rcs.GoogleCalendar.Events.List(calendarID),
+		call: rcs.CalendarService.Events.List(calendarID),
 	}
 }
 
 func (rcs *RealCalendarService) GetEvent(calendarID, eventID string) EventCall {
 	return &realEventCall{
-		getCall: rcs.GoogleCalendar.Events.Get(calendarID, eventID),
+		getCall: rcs.CalendarService.Events.Get(calendarID, eventID),
 	}
 }
 
 func (rcs *RealCalendarService) UpdateEvent(calendarID, eventID string, event *calendar.Event) EventCall {
 	return &realUpdateEventCall{
-		updateCall: rcs.GoogleCalendar.Events.Update(calendarID, eventID, event),
+		updateCall: rcs.CalendarService.Events.Update(calendarID, eventID, event),
 	}
 }
 

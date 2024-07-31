@@ -1,8 +1,8 @@
 package services
 
 import (
+	"errors"
 	"faladev/internal/services"
-	"fmt"
 
 	"google.golang.org/api/calendar/v3"
 )
@@ -42,7 +42,7 @@ func (f *FakeEventsListCall) Do() (*calendar.Events, error) {
 	if f.DoFunc != nil {
 		return f.DoFunc()
 	}
-	return nil, fmt.Errorf("Do function not implemented")
+	return nil, errors.New("Do function not implemented")
 }
 
 type FakeEventCall struct {
@@ -53,5 +53,5 @@ func (f *FakeEventCall) Do() (*calendar.Event, error) {
 	if f.DoFunc != nil {
 		return f.DoFunc()
 	}
-	return nil, fmt.Errorf("Do function not implemented")
+	return nil, errors.New("Do function not implemented")
 }

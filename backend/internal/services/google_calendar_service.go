@@ -30,7 +30,7 @@ func (googleCalendarService *GoogleCalendarService) InitializeService(ctx contex
 	if err != nil {
 		return nil, fmt.Errorf("error creating calendar service: %v", err)
 	}
-	return &RealCalendarService{GoogleCalendar: service}, nil
+	return &RealCalendarService{CalendarService: service}, nil
 }
 
 func (googleCalendarService *GoogleCalendarService) FindEventByKey(ctx context.Context, api CalendarAPI, eventKey string) (*calendar.Event, error) {

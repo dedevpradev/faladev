@@ -61,9 +61,9 @@ func TestFindEventByKey(t *testing.T) {
 				},
 			}
 
-			gcs := services.GoogleCalendarService{}
+			googleCalendarService := services.GoogleCalendarService{}
 
-			event, err := gcs.FindEventByKey(context.Background(), mockService, tt.eventKey)
+			event, err := googleCalendarService.FindEventByKey(context.Background(), mockService, tt.eventKey)
 
 			if tt.expectedError != "" {
 				assert.EqualError(t, err, tt.expectedError)
