@@ -7,4 +7,4 @@ __debug*
 #misc
 .DS_Store
 backend/.env
-
+frontend/package-lock.json
