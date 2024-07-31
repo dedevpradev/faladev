@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 export function MentoringView() {
 	return (
 		<main className="flex items-center justify-center bg-gray-100">
@@ -51,6 +53,15 @@ export function MentoringView() {
 						</button>
 					</div>
 				</form>
+				<div className="flex justify-center mt-5 w-full text-sm">
+					<p>
+						ou{' '}
+						<Link href="/register" className="underline">
+							cadastre-se
+						</Link>{' '}
+						na nossa plataforma!
+					</p>
+				</div>
 				<hr className="my-8 border-gray-300" />
 
 				<p className="text-xs text-gray-600 text-center">

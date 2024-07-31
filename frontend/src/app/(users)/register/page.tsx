@@ -1,14 +1,22 @@
 'use client'
 import { useFormState, useFormStatus } from 'react-dom'
 
+import { AlertBox } from '@/components/form/alert-box'
+import { ErrorMessage } from '@/components/form/error-message'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { createUser, type FormState } from '@/services/users'
+import { createUser } from '@/services/user-actions'
+
+const initialState = {
+	status: null,
+	messsage: null,
+	errors: null,
+}
 
 export default function RegisterPage() {
-	const [state, formAction] = useFormState(createUser, { message: '', errors: null })
+	const [state, formAction] = useFormState(createUser, initialState)
 	const { pending } = useFormStatus()
 
 	return (
@@ -20,24 +28,29 @@ export default function RegisterPage() {
 				</CardHeader>
 				<CardContent className="space-y-4">
 					<div className="space-y-2">
-						<Label htmlFor="full-name">Nome Completo</Label>
-						<Input id="full-name" placeholder="João Gomes" name="full-name" required minLength={3} />
+						<Label htmlFor="name">Nome Completo</Label>
+						<Input id="name" placeholder="João Gomes" name="name" aria-required />
+						<ErrorMessage errors={state.errors} fieldName="name" />
 					</div>
 					<div className="space-y-2">
 						<Label htmlFor="email">Email</Label>
-						<Input id="email" type="email" placeholder="me@example.com" name="email" required />
+						<Input id="email" type="email" placeholder="me@example.com" name="email" aria-required />
+						<ErrorMessage errors={state.errors} fieldName="email" />
 					</div>
 					<div className="space-y-2">
 						<Label htmlFor="password">Senha</Label>
-						<Input id="password" type="password" name="password" required />
+						<Input id="password" type="password" name="password" aria-required />
+						<ErrorMessage errors={state.errors} fieldName="password" />
 					</div>
 					<div className="space-y-2">
-						<Label htmlFor="confirm-password">Confirme a Senha</Label>
-						<Input id="confirm-password" type="password" name="confirm-password" required />
+						<Label htmlFor="confirmPassword">Confirme a Senha</Label>
+						<Input id="confirmPassword" type="password" name="confirmPassword" aria-required />
+						<ErrorMessage errors={state.errors} fieldName="confirmPassword" />
 					</div>
 					<Button className="w-full" disabled={pending} type="submit">
 						Cadastrar
 					</Button>
+					<AlertBox {...state} />
 				</CardContent>
 			</Card>
 		</form>
