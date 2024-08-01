@@ -1,7 +1,8 @@
 'use client'
 import Image from 'next/image'
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
 import { useDropzone } from 'react-dropzone'
+import { ButtonWhiteBlack } from '../Buttons/ButtonWhiteBlack'
 
 const ZERO = 0
 
@@ -29,29 +30,25 @@ export const Upload = () => {
 	}
 
 	return (
-		<div className="flex flex-col w-fit relative ">
-			<div id="1" className="z-10 top-14 flex justify-end relative">
-				{imgPreviewUrl && (
-					<button
-						className="text-2xl text-center  flex flex-col justify-center items-center border border-black p-5 w-3 h-3 rounded-full"
-						onClick={handleRemoveImage}
-					>
-						&times;
-					</button>
-				)}
+		<div className="flex flex-col w-fit h-fit relative ">
+			<div className="z-10 w-11/12 flex justify-end absolute ">
+				{imgPreviewUrl && <ButtonWhiteBlack onClick={handleRemoveImage}>&times;</ButtonWhiteBlack>}
 			</div>
 			<div
-				id="2"
 				className=" relative flex flex-col items-center justify-center border border-dashed h-56 w-56 rounded-full overflow-hidden border-cyan-600 z-0"
 				{...getRootProps()}
 			>
 				<input className="sr-only" {...getInputProps()} />
 				{imgPreviewUrl ? (
-					<div className="z-0">
-						<Image src={imgPreviewUrl} alt="photo preview" width={224} height={224} />
-					</div>
+					<Image src={imgPreviewUrl} alt="photo preview" layout="fill" objectFit="cover" sizes="auto auto" />
 				) : (
-					<div>dwada</div>
+					<Image
+						src={'/assets/person-unknow.png'}
+						alt="photo preview"
+						layout="fill"
+						objectFit="cover"
+						sizes="auto auto"
+					/>
 				)}
 			</div>
 		</div>
