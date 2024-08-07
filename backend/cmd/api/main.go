@@ -55,13 +55,15 @@ func main() {
 		log.Fatalf("Failed to initialize database: %v", err)
 	}
 
+	calendarService := services.NewGoogleCalendarService()
+
 	tokenRepo := repository.NewTokenRepository(db)
 	studentRepo := repository.NewStudentRepository(db)
 	eventRepo := repository.NewEventRepository(db)
 
 	tokenService := services.NewTokenService(tokenRepo)
 	studentService := services.NewStudentService(studentRepo)
-	eventService := services.NewEventService(eventRepo)
+	eventService := services.NewEventService(eventRepo, calendarService)
 
 	token, err := tokenService.GetToken()
 
@@ -74,9 +76,10 @@ func main() {
 		fmt.Println("Please visit the following link to authorize your Google account: ", appOAuth2Config.AuthCodeURL("state-token", oauth2.AccessTypeOffline))
 	}
 
-	calendarService := services.NewGoogleCalendarService()
 	emailService := services.NewGmailService(appOAuth2Config, token)
 
-	http.StartServer(appOAuth2Config, *studentService, calendarService, emailService, *tokenService, *eventService)
+	app := http.NewApp(appOAuth2Config, calendarService, emailService, *studentService, *tokenService, *eventService)
+
+	app.StartServer()
 
 }
