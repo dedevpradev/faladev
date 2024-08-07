@@ -1,10 +1,19 @@
+'use client'
+
 import Link from 'next/link'
 
+import { useMentoringModel } from './mentoring.model'
+
+import { MentoringAgendaService } from '@/services/MentoringAgenda/MentoringAgenda.service'
+
 export function MentoringView() {
+	const mentoringAgendaService = new MentoringAgendaService()
+	const { register, handleOnSubmit } = useMentoringModel(mentoringAgendaService)
+
 	return (
 		<main className="flex items-center justify-center bg-gray-100">
 			<div className="w-full max-w-md bg-white shadow-lg rounded-lg p-6">
-				<form className="space-y-4">
+				<form className="space-y-4" onSubmit={handleOnSubmit}>
 					<div className="mb-2">
 						<label className="block text-gray-800 text-lg font-semibold mb-2" htmlFor="name">
 							Nome
@@ -13,9 +22,8 @@ export function MentoringView() {
 							className="block w-full py-3 px-4 border border-gray-300 rounded-lg shadow-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-300"
 							id="name"
 							type="text"
-							name="name"
+							{...register('name')}
 							placeholder="Digite seu nome"
-							required
 						/>
 					</div>
 					<div className="mb-2">
@@ -26,9 +34,8 @@ export function MentoringView() {
 							className="block w-full py-3 px-4 border border-gray-300 rounded-lg shadow-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-300"
 							id="email"
 							type="email"
-							name="email"
+							{...register('email')}
 							placeholder="Digite seu e-mail"
-							required
 						/>
 					</div>
 					<div className="mb-2">
@@ -39,9 +46,8 @@ export function MentoringView() {
 							className="block w-full py-3 px-4 border border-gray-300 rounded-lg shadow-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-300"
 							id="phone"
 							type="text"
-							name="phone"
+							{...register('phone')}
 							placeholder="Digite seu telefone"
-							required
 						/>
 					</div>
 					<div className="flex items-center justify-center">
