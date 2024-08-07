@@ -7,9 +7,9 @@ import (
 	"faladev/internal/models"
 	"faladev/internal/services"
 	"fmt"
-	"html/template"
 	"net/http"
 	"os"
+	"strconv"
 
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -50,20 +50,12 @@ func NewApp(config *oauth2.Config, calendar services.CalendarService, email serv
 // @Success 200 {string} html "HTML content of the form page"
 // @Router / [get]
 func (app *App) FormHandler(c *gin.Context) {
-
-	tmpl, err := template.ParseFiles("templates/web/form.html")
-
-	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, fmt.Errorf("error parsing template: %v", err))
-		return
-	}
-
-	tmpl.Execute(c.Writer, nil)
+	c.Redirect(http.StatusMovedPermanently, "http://localhost:3000")
 }
 
-// EventHandler handles the event handling endpoint.
+// SubscribeEventHandler handles the event handling endpoint.
 // @Summary Handle event creation and interaction
-// @Description Handles event creation, guest addition, email sending, and redirects to Google Meet link.
+// @Description Handles event creation, guest addition, and email sending, then returns the URL of the event.
 // @Accept json
 // @Produce json
 // @Param name formData string true "Name of the student"
@@ -73,11 +65,16 @@ func (app *App) FormHandler(c *gin.Context) {
 // @Failure 400 {object} ErrorResponse "No Google Meet link available or other errors"
 // @Failure 500 {object} ErrorResponse "Internal server error"
 // @Router /event [post]
-func (app *App) EventHandler(c *gin.Context) {
+func (app *App) SubscribeEventHandler(c *gin.Context) {
 
-	name, email, phone := c.PostForm("name"), c.PostForm("email"), c.PostForm("phone")
+	var student models.Student
 
-	if err := app.insertOrUpdateStudent(name, email, phone); err != nil {
+	if err := c.ShouldBind(&student); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := app.insertOrUpdateStudent(student.Name, student.Email, student.Phone); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -89,19 +86,19 @@ func (app *App) EventHandler(c *gin.Context) {
 		return
 	}
 
-	eventDetails, err := app.addGuestToNextEvent(c.Request.Context(), email, token)
+	eventDetails, err := app.addGuestToNextEvent(c.Request.Context(), student.Email, token)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	if err := app.sendInvite(email, eventDetails, token); err != nil {
+	if err := app.sendInvite(student.Email, eventDetails, token); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.Redirect(http.StatusSeeOther, eventDetails.Location)
+	c.JSON(http.StatusOK, gin.H{"url": eventDetails.Location})
 }
 
 func (app *App) insertOrUpdateStudent(name, email, phone string) error {
@@ -214,15 +211,87 @@ func (app *App) OAuthCallbackHandler(c *gin.Context) {
 	c.Redirect(http.StatusSeeOther, "/")
 }
 
-func StartServer(appOAuth2Config *oauth2.Config, studentService services.StudentService, calendarService services.CalendarService, emailService services.EmailService, tokenService services.TokenService, eventService services.EventService) {
+func (app *App) GetEventsHandler(c *gin.Context) {
 
-	app := NewApp(appOAuth2Config, calendarService, emailService, studentService, tokenService, eventService)
+	events, err := app.eventService.ListEvents()
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Error listing events: %v", err)})
+		return
+	}
+
+	c.JSON(http.StatusOK, events)
+}
+
+func (app *App) GetEventByIdHandler(c *gin.Context) {
+
+	idStr := c.Param("id")
+
+	id, err := strconv.Atoi(idStr)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("Invalid event ID: %v", err)})
+		return
+	}
+
+	event, err := app.eventService.GetEventByID(uint(id))
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Error getting event: %v", err)})
+		return
+	}
+
+	c.JSON(http.StatusOK, event)
+
+}
+
+func (app *App) CreateEventHandler(c *gin.Context) {
+
+	var event models.Event
+
+	ctx := c.Request.Context()
+
+	if err := c.ShouldBindJSON(&event); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("Error binding JSON: %v", err)})
+		return
+	}
+
+	token, err := app.validateOrRefreshToken(ctx)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	calendarService, err := app.initializeCalendarService(ctx, token)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := app.eventService.CreateEvent(ctx, calendarService, &event); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Error creating event: %v", err)})
+		return
+	}
+
+	c.JSON(http.StatusOK, event)
+
+}
+
+func (app *App) StartServer() {
 
 	router := gin.Default()
 
 	router.GET("/", app.FormHandler)
 	router.GET("/callback", app.OAuthCallbackHandler)
-	router.POST("/event", app.EventHandler)
+
+	apiGroup := router.Group("/api")
+
+	apiGroup.GET("/events", app.GetEventsHandler)
+	apiGroup.GET("/events/:id", app.GetEventByIdHandler)
+	apiGroup.POST("/events", app.CreateEventHandler)
+	apiGroup.POST("/subscribe", app.SubscribeEventHandler)
 
 	router.Static("/static/", "static")
 

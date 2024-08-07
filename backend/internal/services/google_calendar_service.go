@@ -4,10 +4,12 @@ import (
 	"context"
 	"faladev/internal/auth"
 	"fmt"
+	"net/http"
 
 	"github.com/pkg/errors"
 	"golang.org/x/oauth2"
 	"google.golang.org/api/calendar/v3"
+	"google.golang.org/api/googleapi"
 	"google.golang.org/api/option"
 )
 
@@ -71,8 +73,41 @@ func (googleCalendarService *GoogleCalendarService) AddGuestToEvent(ctx context.
 	_, err = api.UpdateEvent("primary", updatedEvent.Id, updatedEvent).Do()
 
 	if err != nil {
-		return nil, errors.Wrap(err, "error adding guest to event")
+
+		if gerr, ok := err.(*googleapi.Error); ok {
+			switch gerr.Code {
+			case http.StatusNotFound:
+				return nil, errors.New("Event not found")
+			case http.StatusForbidden:
+				return nil, errors.New("Forbidden")
+			default:
+				return nil, errors.Wrap(err, "error updating event")
+			}
+		} else {
+			return nil, errors.Wrap(err, "unexpected error")
+		}
 	}
 
 	return updatedEvent, nil
+}
+
+func (googleCalendarService *GoogleCalendarService) CreateEvent(ctx context.Context, api CalendarAPI, newEvent *calendar.Event) (*calendar.Event, error) {
+
+	event, err := api.InsertEvent("primary", newEvent).Do()
+
+	if err != nil {
+		if gerr, ok := err.(*googleapi.Error); ok {
+			switch gerr.Code {
+			case http.StatusForbidden:
+				return nil, errors.New("Forbidden: Access to calendar denied")
+			case http.StatusBadRequest:
+				return nil, errors.New("Bad Request: Invalid event details")
+			default:
+				return nil, errors.Wrap(err, "error creating event")
+			}
+		} else {
+			return nil, errors.Wrap(err, "unexpected error while creating event")
+		}
+	}
+	return event, nil
 }
