@@ -1,6 +1,6 @@
-# Faladev - Integração com Google Calendar e Envio de Emails
+# Plataforma para gestão de mentorias
 
-Este projeto é uma aplicação Go que integra com o Google Calendar e tem permissão para enviar emails.
+Este projeto é uma aplicação open source feita em Go no backend e React no frontend, inicialmente integrada aos serviços do Google Calendar e Gmail, base para discutirmos boas práticas, conceitos e fundamentos.
 
 ## Pré-requisitos
 
@@ -124,7 +124,7 @@ Selecione a opção `Connect to server` e clique no botão de Play.
 Instale o pacote golang `swag`:
 
    ```bash
-  go install github.com/swaggo/swag/cmd/swag@latest 
+  go install github.com/swaggo/swag/cmd/swag@latest
    ```
 
 Vá para a pasta backend e rode o seguinte comando:
