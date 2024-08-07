@@ -7,7 +7,6 @@ import (
 	"faladev/internal/models"
 	"faladev/internal/services"
 	"fmt"
-	"html/template"
 	"net/http"
 	"os"
 	"strconv"
@@ -51,15 +50,7 @@ func NewApp(config *oauth2.Config, calendar services.CalendarService, email serv
 // @Success 200 {string} html "HTML content of the form page"
 // @Router / [get]
 func (app *App) FormHandler(c *gin.Context) {
-
-	tmpl, err := template.ParseFiles("templates/web/form.html")
-
-	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, fmt.Errorf("error parsing template: %v", err))
-		return
-	}
-
-	tmpl.Execute(c.Writer, nil)
+	c.Redirect(http.StatusMovedPermanently, "http://localhost:3000")
 }
 
 // SubscribeEventHandler handles the event handling endpoint.
