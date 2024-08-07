@@ -1,7 +1,12 @@
 package services
 
 import (
+	"context"
 	"faladev/internal/models"
+	"time"
+
+	"github.com/google/uuid"
+	"google.golang.org/api/calendar/v3"
 )
 
 type EventRepository interface {
@@ -15,15 +20,59 @@ type EventRepository interface {
 }
 
 type EventService struct {
-	repo EventRepository
+	repo            EventRepository
+	calendarService CalendarService
 }
 
-func NewEventService(repo EventRepository) *EventService {
-	return &EventService{repo: repo}
+func NewEventService(repo EventRepository, calendarService CalendarService) *EventService {
+	return &EventService{
+		repo:            repo,
+		calendarService: calendarService,
+	}
 }
 
-func (eventService *EventService) CreateEvent(event *models.Event) error {
-	return eventService.repo.CreateEvent(event)
+func (eventService *EventService) CreateEvent(ctx context.Context, api *CalendarAPI, event *models.Event) error {
+
+	if api == nil {
+		return nil
+	}
+
+	eventCalendar := &calendar.Event{
+		Summary:     event.Name,
+		Description: event.Description,
+		Start: &calendar.EventDateTime{
+			DateTime: event.StartTime.Format(time.RFC3339),
+			TimeZone: "America/Sao_Paulo",
+		},
+		End: &calendar.EventDateTime{
+			DateTime: event.EndTime.Format(time.RFC3339),
+			TimeZone: "America/Sao_Paulo",
+		},
+		ConferenceData: &calendar.ConferenceData{
+			CreateRequest: &calendar.CreateConferenceRequest{
+				RequestId: uuid.New().String(),
+				ConferenceSolutionKey: &calendar.ConferenceSolutionKey{
+					Type: "hangoutsMeet",
+				},
+			},
+		},
+	}
+
+	newEvent, err := eventService.calendarService.CreateEvent(ctx, *api, eventCalendar)
+
+	if err != nil {
+		return err
+	}
+
+	event.Key = newEvent.Id
+	event.Location = newEvent.HangoutLink
+	event.CalendarEventLink = newEvent.HtmlLink
+
+	if err := eventService.repo.CreateEvent(event); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (eventService *EventService) GetEventByID(id uint) (*models.Event, error) {
