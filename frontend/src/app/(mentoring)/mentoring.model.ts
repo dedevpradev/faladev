@@ -5,15 +5,19 @@ import * as z from 'zod'
 import { IMentoringAgendaService } from '@/services/MentoringAgenda/IMentoringAgendaService.model'
 
 const schema = z.object({
-	name: z.string(),
-	email: z.string(),
-	phone: z.string(),
+	name: z.string().min(3, { message: 'Nome deve ter no mínimo 3 caracteres' }),
+	email: z.string().email({ message: 'Endereço de email inválido' }),
+	phone: z.string({ required_error: 'Telefone é necessário' }),
 })
 
-type Schema = z.infer<typeof schema>
+export type Schema = z.infer<typeof schema>
 
 export function useMentoringModel(service: IMentoringAgendaService) {
-	const { register, handleSubmit } = useForm<Schema>({
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<Schema>({
 		resolver: zodResolver(schema),
 	})
 
@@ -29,5 +33,5 @@ export function useMentoringModel(service: IMentoringAgendaService) {
 
 	const handleOnSubmit = handleSubmit(data => createMentoringAgenda(data))
 
-	return { register, handleOnSubmit }
+	return { register, handleOnSubmit, errors }
 }
