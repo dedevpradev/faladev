@@ -11,6 +11,7 @@ type FakeCalendarService struct {
 	EventsListMock  func(calendarID string) services.EventsListCall
 	GetEventMock    func(calendarID, eventID string) services.EventCall
 	UpdateEventMock func(calendarID, eventID string, event *calendar.Event) services.EventCall
+	InsertEventMock func(calendarID string, event *calendar.Event) services.EventCall
 }
 
 func (f *FakeCalendarService) EventsList(calendarID string) services.EventsListCall {
@@ -30,6 +31,13 @@ func (f *FakeCalendarService) GetEvent(calendarID, eventID string) services.Even
 func (f *FakeCalendarService) UpdateEvent(calendarID, eventID string, event *calendar.Event) services.EventCall {
 	if f.UpdateEventMock != nil {
 		return f.UpdateEventMock(calendarID, eventID, event)
+	}
+	return nil
+}
+
+func (f *FakeCalendarService) InsertEvent(calendarID string, event *calendar.Event) services.EventCall {
+	if f.InsertEventMock != nil {
+		return f.InsertEventMock(calendarID, event)
 	}
 	return nil
 }
