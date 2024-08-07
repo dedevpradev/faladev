@@ -1,14 +1,23 @@
-'use client'
-
 import Link from 'next/link'
+import { UseFormRegister, FieldErrors, RegisterOptions } from 'react-hook-form'
 
-import { useMentoringModel } from './mentoring.model'
+import { ErrorMessage } from '@/components/form/error-message'
 
-import { MentoringAgendaService } from '@/services/MentoringAgenda/MentoringAgenda.service'
+import { Schema } from './mentoring.model'
 
-export function MentoringView() {
-	const mentoringAgendaService = new MentoringAgendaService()
-	const { register, handleOnSubmit } = useMentoringModel(mentoringAgendaService)
+
+export type Errors = FieldErrors<{
+	[key: string]: any
+}>
+
+type MentoringViewProps = {
+	register: UseFormRegister<Schema>
+	handleOnSubmit: () => void
+	errors: Errors
+}
+
+export function MentoringView(props: MentoringViewProps) {
+	const { register, handleOnSubmit, errors } = props
 
 	return (
 		<main className="flex items-center justify-center bg-gray-100">
@@ -25,6 +34,7 @@ export function MentoringView() {
 							{...register('name')}
 							placeholder="Digite seu nome"
 						/>
+						<ErrorMessage errors={errors} fieldName="name" />
 					</div>
 					<div className="mb-2">
 						<label className="block text-gray-800 text-lg font-semibold mb-2" htmlFor="email">
@@ -37,6 +47,7 @@ export function MentoringView() {
 							{...register('email')}
 							placeholder="Digite seu e-mail"
 						/>
+						<ErrorMessage errors={errors} fieldName="email" />
 					</div>
 					<div className="mb-2">
 						<label className="block text-gray-800 text-lg font-semibold mb-2" htmlFor="phone">
@@ -49,6 +60,7 @@ export function MentoringView() {
 							{...register('phone')}
 							placeholder="Digite seu telefone"
 						/>
+						<ErrorMessage errors={errors} fieldName="phone" />
 					</div>
 					<div className="flex items-center justify-center">
 						<button
