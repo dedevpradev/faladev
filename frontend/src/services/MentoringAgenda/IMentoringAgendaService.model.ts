@@ -1,3 +1,3 @@
 export interface IMentoringAgendaService {
-	SignUpMentoring: () => void
+	SignUpMentoring: (formData: FormData) => void
 }

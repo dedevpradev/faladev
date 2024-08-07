@@ -1,5 +1,8 @@
 import axios from 'axios'
 
 export const apiBFF = axios.create({
-	baseURL: '/api',
+	baseURL: 'http://localhost:8080',
+	headers: {
+		'Access-Control-Allow-Origin': '*',
+	},
 })

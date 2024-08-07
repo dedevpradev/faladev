@@ -1,10 +1,28 @@
 import Link from 'next/link'
+import { UseFormRegister, FieldErrors, RegisterOptions } from 'react-hook-form'
 
-export function MentoringView() {
+import { ErrorMessage } from '@/components/form/error-message'
+
+import { Schema } from './mentoring.model'
+
+
+export type Errors = FieldErrors<{
+	[key: string]: any
+}>
+
+type MentoringViewProps = {
+	register: UseFormRegister<Schema>
+	handleOnSubmit: () => void
+	errors: Errors
+}
+
+export function MentoringView(props: MentoringViewProps) {
+	const { register, handleOnSubmit, errors } = props
+
 	return (
 		<main className="flex items-center justify-center bg-gray-100">
 			<div className="w-full max-w-md bg-white shadow-lg rounded-lg p-6">
-				<form className="space-y-4">
+				<form className="space-y-4" onSubmit={handleOnSubmit}>
 					<div className="mb-2">
 						<label className="block text-gray-800 text-lg font-semibold mb-2" htmlFor="name">
 							Nome
@@ -13,10 +31,10 @@ export function MentoringView() {
 							className="block w-full py-3 px-4 border border-gray-300 rounded-lg shadow-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-300"
 							id="name"
 							type="text"
-							name="name"
+							{...register('name')}
 							placeholder="Digite seu nome"
-							required
 						/>
+						<ErrorMessage errors={errors} fieldName="name" />
 					</div>
 					<div className="mb-2">
 						<label className="block text-gray-800 text-lg font-semibold mb-2" htmlFor="email">
@@ -26,10 +44,10 @@ export function MentoringView() {
 							className="block w-full py-3 px-4 border border-gray-300 rounded-lg shadow-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-300"
 							id="email"
 							type="email"
-							name="email"
+							{...register('email')}
 							placeholder="Digite seu e-mail"
-							required
 						/>
+						<ErrorMessage errors={errors} fieldName="email" />
 					</div>
 					<div className="mb-2">
 						<label className="block text-gray-800 text-lg font-semibold mb-2" htmlFor="phone">
@@ -39,10 +57,10 @@ export function MentoringView() {
 							className="block w-full py-3 px-4 border border-gray-300 rounded-lg shadow-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-300"
 							id="phone"
 							type="text"
-							name="phone"
+							{...register('phone')}
 							placeholder="Digite seu telefone"
-							required
 						/>
+						<ErrorMessage errors={errors} fieldName="phone" />
 					</div>
 					<div className="flex items-center justify-center">
 						<button
