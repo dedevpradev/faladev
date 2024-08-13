@@ -6,27 +6,28 @@ import { ButtonWhiteBlack } from '../Buttons/ButtonWhiteBlack'
 
 const ZERO = 0
 
-export const Upload = () => {
-	const [uploadFile, setUploadFile] = useState<File | null>(null)
+interface UploadProps {
+	handleUpload: (file: File) => void
+}
+
+export const Upload = ({ handleUpload }: UploadProps) => {
 	const [imgPreviewUrl, setImgPreviewUrl] = useState<string | null>(null)
 
 	const { getRootProps, getInputProps } = useDropzone({
 		onDrop: acceptedFiles => {
 			const file = acceptedFiles[ZERO]
-			setUploadFile(file)
+			handleUpload(file)
 
 			const reader = new FileReader()
 			reader.onloadend = () => {
 				setImgPreviewUrl(reader.result as string)
 			}
-
 			reader.readAsDataURL(file)
 		},
 	})
 
 	const handleRemoveImage = () => {
 		setImgPreviewUrl(null)
-		setUploadFile(null)
 	}
 
 	return (
