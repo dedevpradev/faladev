@@ -9,6 +9,8 @@ export type Fields = {
 	email: string
 	password: string
 	confirmPassword: string
+	eventName: string
+	eventDate: string
 }
 
 export type FormState = {
@@ -26,6 +28,8 @@ const schema = z
 		email: z.string().email(),
 		password: z.string().min(6),
 		confirmPassword: z.string().min(6),
+		eventName: z.string().optional(),
+		eventDate: z.string().optional()
 	})
 	.refine(data => data.password === data.confirmPassword, {
 		message: 'Senha e Confirmação de senha precisam ser iguais',
@@ -38,6 +42,8 @@ export async function createUser(prevState: FormState, formData: FormData): Prom
 		email: formData.get('email'),
 		password: formData.get('password'),
 		confirmPassword: formData.get('confirmPassword'),
+		eventName: formData.get('eventName'),
+		eventDate: formData.get('eventDate'),
 	})
 
 	if (!validatedFields.success) {

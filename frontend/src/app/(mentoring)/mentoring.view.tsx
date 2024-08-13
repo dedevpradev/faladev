@@ -53,11 +53,17 @@ export function MentoringView() {
 						</button>
 					</div>
 				</form>
-				<div className="flex justify-center mt-5 w-full text-sm">
+				<div className="flex flex-col items-center mt-5 w-full text-base">
+					<p className="mb-2">
+						Quer saber mais?{' '}
+						<Link href="/events" className="underline text-blue-600" aria-label="Ver eventos">
+							Veja nossos eventos!
+						</Link>
+					</p>
 					<p>
 						ou{' '}
-						<Link href="/register" className="underline">
-							cadastre-se
+						<Link href="/register" className="underline text-blue-600" aria-label="Cadastrar-se na plataforma">
+							Cadastre-se
 						</Link>{' '}
 						na nossa plataforma!
 					</p>
