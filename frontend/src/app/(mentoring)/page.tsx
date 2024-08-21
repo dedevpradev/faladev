@@ -7,7 +7,15 @@ import { MentoringView } from './mentoring.view'
 
 export default function Home() {
 	const mentoringAgendaService = new MentoringAgendaService()
-	const { register, handleOnSubmit, errors } = useMentoringModel(mentoringAgendaService)
+	const { register, handleOnSubmit, errors, apiStatus, isSubmitting } = useMentoringModel(mentoringAgendaService)
 
-	return <MentoringView register={register} handleOnSubmit={handleOnSubmit} errors={errors} />
+	return (
+		<MentoringView
+			register={register}
+			handleOnSubmit={handleOnSubmit}
+			errors={errors}
+			apiStatus={apiStatus}
+			isSubmitting={isSubmitting}
+		/>
+	)
 }

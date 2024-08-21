@@ -1,10 +1,12 @@
-import { apiBFF } from '../apiBFF';
+import { Schema } from '@/app/(mentoring)/mentoring.model'
 
-import { IMentoringAgendaService } from './IMentoringAgendaService.model';
+import { apiBFF } from '../apiBFF'
+
+import { IMentoringAgendaService } from './IMentoringAgendaService.model'
 
 export class MentoringAgendaService implements IMentoringAgendaService {
-	async SignUpMentoring(formData: FormData) {
-		const { data } = await apiBFF.post('/event', formData)
+	async SignUpMentoring(userData: Schema) {
+		const { data } = await apiBFF.post('/api/events', userData)
 		return data
 	}
 }

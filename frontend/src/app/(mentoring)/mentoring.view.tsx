@@ -1,10 +1,10 @@
 import Link from 'next/link'
 import { UseFormRegister, FieldErrors, RegisterOptions } from 'react-hook-form'
 
+import { AlertBox } from '@/components/form/alert-box'
 import { ErrorMessage } from '@/components/form/error-message'
 
-import { Schema } from './mentoring.model'
-
+import { ApiStatus, Schema } from './mentoring.model'
 
 export type Errors = FieldErrors<{
 	[key: string]: any
@@ -14,10 +14,12 @@ type MentoringViewProps = {
 	register: UseFormRegister<Schema>
 	handleOnSubmit: () => void
 	errors: Errors
+	apiStatus: ApiStatus
+	isSubmitting: boolean
 }
 
 export function MentoringView(props: MentoringViewProps) {
-	const { register, handleOnSubmit, errors } = props
+	const { register, handleOnSubmit, errors, apiStatus, isSubmitting } = props
 
 	return (
 		<main className="flex items-center justify-center bg-gray-100">
@@ -64,13 +66,17 @@ export function MentoringView(props: MentoringViewProps) {
 					</div>
 					<div className="flex items-center justify-center">
 						<button
-							className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-sm transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-300"
+							className={`bg-blue-500 text-white font-bold py-3 px-6 rounded-sm transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-300 ${
+								isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'
+							}`}
 							type="submit"
+							disabled={isSubmitting}
 						>
-							Quero participar
+							{isSubmitting ? 'Registrando...' : 'Quero participar'}
 						</button>
 					</div>
 				</form>
+				<AlertBox className="mt-4" status={apiStatus.status} message={apiStatus.message} />
 				<div className="flex justify-center mt-5 w-full text-sm">
 					<p>
 						ou{' '}
