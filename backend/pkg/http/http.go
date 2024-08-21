@@ -11,6 +11,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/gin-contrib/cors"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"golang.org/x/oauth2"
@@ -279,9 +280,24 @@ func (app *App) CreateEventHandler(c *gin.Context) {
 
 }
 
+
+func configureCORS(r *gin.Engine) {
+	
+	configCors := cors.DefaultConfig()
+	configCors.AllowAllOrigins = true
+	configCors.AllowMethods = []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"}
+	configCors.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Authorization", }
+	
+	r.Use(cors.New(configCors))
+
+}
+
+
 func (app *App) StartServer() {
 
 	router := gin.Default()
+
+	configureCORS(router)
 
 	router.GET("/", app.FormHandler)
 	router.GET("/callback", app.OAuthCallbackHandler)

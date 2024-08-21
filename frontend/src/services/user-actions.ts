@@ -52,7 +52,7 @@ export async function createUser(prevState: FormState, formData: FormData): Prom
 	}
 
 	try {
-		apiBFF.post('/user', validatedFields.data)
+		apiBFF.post('/api/subscribe', validatedFields.data)
 
 		return {
 			status: 'success',

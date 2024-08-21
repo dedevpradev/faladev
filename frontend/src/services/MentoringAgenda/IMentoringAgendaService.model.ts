@@ -1,3 +1,5 @@
+import { Schema } from '@/app/(mentoring)/mentoring.model'
+
 export interface IMentoringAgendaService {
-	SignUpMentoring: () => void
+	SignUpMentoring: (data: Schema) => void
 }
