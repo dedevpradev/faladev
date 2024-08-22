@@ -4,27 +4,21 @@ import { UseFormRegister, FieldErrors, RegisterOptions } from 'react-hook-form'
 import { AlertBox } from '@/components/form/alert-box'
 import { ErrorMessage } from '@/components/form/error-message'
 
-import { ApiStatus, Schema } from './mentoring.model'
+import { useMentoringModel } from './mentoring.model'
 
 export type Errors = FieldErrors<{
 	[key: string]: any
 }>
 
-type MentoringViewProps = {
-	register: UseFormRegister<Schema>
-	handleOnSubmit: () => void
-	errors: Errors
-	apiStatus: ApiStatus
-	isSubmitting: boolean
-}
+type MentoringViewProps = ReturnType<typeof useMentoringModel>
 
 export function MentoringView(props: MentoringViewProps) {
-	const { register, handleOnSubmit, errors, apiStatus, isSubmitting } = props
+	const { register, handleSubmitMentoring, handleSubmit, errors, registrationResult, isSubmitting } = props
 
 	return (
 		<main className="flex items-center justify-center bg-gray-100">
 			<div className="w-full max-w-md bg-white shadow-lg rounded-lg p-6">
-				<form className="space-y-4" onSubmit={handleOnSubmit}>
+				<form className="space-y-4" onSubmit={handleSubmit(handleSubmitMentoring)}>
 					<div className="mb-2">
 						<label className="block text-gray-800 text-lg font-semibold mb-2" htmlFor="name">
 							Nome
@@ -76,7 +70,14 @@ export function MentoringView(props: MentoringViewProps) {
 						</button>
 					</div>
 				</form>
-				<AlertBox className="mt-4" status={apiStatus.status} message={apiStatus.message} />
+				{registrationResult && (
+					<AlertBox
+						className="mt-4"
+						status={registrationResult.status}
+						title={registrationResult.title}
+						description={registrationResult.description}
+					/>
+				)}
 				<div className="flex justify-center mt-5 w-full text-sm">
 					<p>
 						ou{' '}

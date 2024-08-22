@@ -1,16 +1,22 @@
+import { RegistrationResult, Status } from '@/app/(mentoring)/mentoring.type'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { type FormState } from '@/services/user-actions'
 
+type AlertBoxProps = RegistrationResult & React.HTMLAttributes<HTMLDivElement>
 
-type AlertBoxProps = FormState & React.HTMLAttributes<HTMLDivElement>
+const alertOptions: Record<Status, string> = {
+	error: 'destructive',
+	success: 'creation',
+}
 
-export const AlertBox: React.FC<AlertBoxProps> = ({ status, message, ...props }) => {
-	if (!status) return null
+const alertVariant = (status: Status) => {
+	return alertOptions[status] ?? alertOptions.success
+}
 
+export const AlertBox: React.FC<AlertBoxProps> = ({ status, title, description, ...props }) => {
 	return (
-		<Alert {...props} variant={`${status == 'error' ? 'destructive' : 'creation'}`}>
-			<AlertTitle>{message?.title}</AlertTitle>
-			<AlertDescription>{message?.description}</AlertDescription>
+		<Alert {...props} variant={alertVariant(status)}>
+			<AlertTitle>{title}</AlertTitle>
+			<AlertDescription>{description}</AlertDescription>
 		</Alert>
 	)
 }
