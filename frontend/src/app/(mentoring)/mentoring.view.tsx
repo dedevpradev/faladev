@@ -3,6 +3,7 @@ import { UseFormRegister, FieldErrors, RegisterOptions } from 'react-hook-form'
 
 import { AlertBox } from '@/components/form/alert-box'
 import { ErrorMessage } from '@/components/form/error-message'
+import { TextInput } from '@/components/form/text-input'
 
 import { ApiStatus, Schema } from './mentoring.model'
 
@@ -26,49 +27,39 @@ export function MentoringView(props: MentoringViewProps) {
 			<div className="w-full max-w-md bg-white shadow-lg rounded-lg p-6">
 				<form className="space-y-4" onSubmit={handleOnSubmit}>
 					<div className="mb-2">
-						<label className="block text-gray-800 text-lg font-semibold mb-2" htmlFor="name">
-							Nome
-						</label>
-						<input
-							className="block w-full py-3 px-4 border border-gray-300 rounded-lg shadow-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-300"
+						<TextInput
+							label="Nome"
 							id="name"
 							type="text"
-							{...register('name')}
 							placeholder="Digite seu nome"
+							register={register}
 						/>
 						<ErrorMessage errors={errors} fieldName="name" />
 					</div>
 					<div className="mb-2">
-						<label className="block text-gray-800 text-lg font-semibold mb-2" htmlFor="email">
-							E-mail
-						</label>
-						<input
-							className="block w-full py-3 px-4 border border-gray-300 rounded-lg shadow-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-300"
+						<TextInput
+							label="E-mail"
 							id="email"
 							type="email"
-							{...register('email')}
 							placeholder="Digite seu e-mail"
+							register={register}
 						/>
 						<ErrorMessage errors={errors} fieldName="email" />
 					</div>
 					<div className="mb-2">
-						<label className="block text-gray-800 text-lg font-semibold mb-2" htmlFor="phone">
-							Telefone
-						</label>
-						<input
-							className="block w-full py-3 px-4 border border-gray-300 rounded-lg shadow-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-300"
+						<TextInput
+							label="Telefone"
 							id="phone"
 							type="text"
-							{...register('phone')}
 							placeholder="Digite seu telefone"
+							register={register}
 						/>
 						<ErrorMessage errors={errors} fieldName="phone" />
 					</div>
 					<div className="flex items-center justify-center">
 						<button
-							className={`bg-blue-500 text-white font-bold py-3 px-6 rounded-sm transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-300 ${
-								isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'
-							}`}
+							className={`bg-blue-500 text-white font-bold py-3 px-6 rounded-sm transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-300 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'
+								}`}
 							type="submit"
 							disabled={isSubmitting}
 						>
