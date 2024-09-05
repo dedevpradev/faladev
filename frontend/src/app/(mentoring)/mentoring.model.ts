@@ -22,8 +22,8 @@ export function useMentoringModel(mentoringService: IMentoringAgendaService) {
 
 	const { mutate: createMentoringAgenda } = useMutationMentoring({
 		service: mentoringService,
-		onError: onRegistrationSuccess,
-		onSuccess: onRegistrationError,
+		onError: onRegistrationError,
+		onSuccess: onRegistrationSuccess,
 	})
 
 	return {

@@ -1,7 +1,8 @@
-import { SchemaMentoringType } from '@/app/(mentoring)/mentoring.type'
-import { IMentoringAgendaService } from '@/services/MentoringAgenda/IMentoringAgendaService.model'
 import { MutationOptions, useMutation } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
+
+import { SchemaMentoringType } from '@/app/(mentoring)/mentoring.type'
+import { IMentoringAgendaService } from '@/services/MentoringAgenda/IMentoringAgendaService.model'
 
 type MutationMentoringProps = {
 	service: IMentoringAgendaService

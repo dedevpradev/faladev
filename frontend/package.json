@@ -27,6 +27,8 @@
 		"react-icons": "^5.2.1",
 		"tailwind-merge": "^2.4.0",
 		"tailwindcss-animate": "^1.0.7",
+		"unplugin-auto-import": "^0.18.2",
+		"vite-tsconfig-paths": "^5.0.1",
 		"zod": "^3.23.8"
 	},
 	"devDependencies": {
@@ -44,6 +46,7 @@
 		"@types/react": "^18",
 		"@types/react-dom": "^18",
 		"@vitejs/plugin-react": "^4.3.1",
+		"@vitest/coverage-v8": "^2.0.5",
 		"eslint": "^8",
 		"eslint-config-next": "14.2.5",
 		"eslint-plugin-storybook": "^0.8.0",

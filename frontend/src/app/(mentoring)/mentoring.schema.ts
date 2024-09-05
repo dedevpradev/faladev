@@ -6,4 +6,4 @@ export const SchemaMentoring = z.object({
 	phone: z.string({ required_error: 'Telefone é necessário' }),
 })
 
-export type SchemaMentoringType = z.infer<typeof SchemaMentoring>
+

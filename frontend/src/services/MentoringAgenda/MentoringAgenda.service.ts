@@ -1,4 +1,4 @@
-import { SchemaMentoringType } from '@/app/(mentoring)/mentoring.schema'
+import { SchemaMentoringType } from '@/app/(mentoring)/mentoring.type'
 import { apiBFF } from '../apiBFF'
 import { IMentoringAgendaService } from './IMentoringAgendaService.model'
 
