@@ -1,17 +1,20 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { SchemaMentoring } from './mentoring.schema'
-import { IMentoringAgendaService } from '@/services/MentoringAgenda/IMentoringAgendaService.model'
+
 import { useMutationMentoring } from '@/Mutate/useMutationMentoring'
-import { registrationStatusMessages } from './registrationStatusMessages'
+import { IMentoringAgendaService } from '@/services/MentoringAgenda/MentoringAgenda.service'
+
+import { SchemaMentoring } from './mentoring.schema'
 import { RegistrationResult, SchemaMentoringType } from './mentoring.type'
+import { registrationStatusMessages } from './registrationStatusMessages'
 
 export function useMentoringModel(mentoringService: IMentoringAgendaService) {
 	const [registrationResult, setRegistrationResult] = useState<RegistrationResult | null>(null)
 	const onRegistrationSuccess = () => setRegistrationResult(registrationStatusMessages.success)
 	const onRegistrationError = () => setRegistrationResult(registrationStatusMessages.error)
 	const handleSubmitMentoring = (data: SchemaMentoringType) => createMentoringAgenda(data)
+
 	const {
 		register,
 		handleSubmit,
@@ -19,6 +22,7 @@ export function useMentoringModel(mentoringService: IMentoringAgendaService) {
 	} = useForm<SchemaMentoringType>({
 		resolver: zodResolver(SchemaMentoring),
 	})
+	const submitButtonLabel = isSubmitting ? 'Registrando...' : 'Quero participar'
 
 	const { mutate: createMentoringAgenda } = useMutationMentoring({
 		service: mentoringService,
@@ -33,5 +37,6 @@ export function useMentoringModel(mentoringService: IMentoringAgendaService) {
 		errors,
 		registrationResult,
 		isSubmitting,
+		submitButtonLabel,
 	}
 }

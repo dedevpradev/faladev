@@ -1,0 +1,8 @@
+repos:
+  - repo:
+    rev:
+    hooks:
+      - id:
+        stages: [commit]
+      - id:
+        stages: [post-commit]
