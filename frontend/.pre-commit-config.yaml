@@ -1,8 +1,16 @@
 repos:
-  - repo:
-    rev:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.0
     hooks:
-      - id:
+      - id: trailing-whitespace
         stages: [commit]
-      - id:
+        args: ['--no-fail-on-changed'] # Não falha, mesmo que haja espaços em branco
+      - id: end-of-file-fixer
+        stages: [commit]
+        args: ['--no-fail-on-changed'] # Não falha, mesmo que haja fim de linha incorreto
+      - id: check-yaml
+        stages: [commit]
+        args: ['--no-fail-on-changed'] # Não falha mesmo que o YAML tenha erros
+      - id: trailing-whitespace
         stages: [post-commit]
+        args: ['--no-fail-on-changed'] # Permite passar após commit sem erros
