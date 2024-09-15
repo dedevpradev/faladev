@@ -9,12 +9,17 @@
 		"lint": "next lint",
 		"storybook": "storybook dev -p 6006",
 		"build-storybook": "storybook build",
-		"test": "vitest"
+		"test": "vitest",
+		"coverage": "vitest --coverage",
+		"cypress": "cypress open",
+		"test:cypress:run": "cypress run"
 	},
 	"dependencies": {
+		"@faker-js/faker": "^9.0.0",
 		"@hookform/resolvers": "^3.9.0",
 		"@radix-ui/react-label": "^2.1.0",
 		"@radix-ui/react-slot": "^1.1.0",
+		"@tanstack/react-query": "^5.52.0",
 		"axios": "^1.7.2",
 		"class-variance-authority": "^0.7.0",
 		"clsx": "^2.1.1",
@@ -26,6 +31,8 @@
 		"react-icons": "^5.2.1",
 		"tailwind-merge": "^2.4.0",
 		"tailwindcss-animate": "^1.0.7",
+		"unplugin-auto-import": "^0.18.2",
+		"vite-tsconfig-paths": "^5.0.1",
 		"zod": "^3.23.8"
 	},
 	"devDependencies": {
@@ -39,10 +46,14 @@
 		"@storybook/react": "^8.2.5",
 		"@storybook/test": "^8.2.5",
 		"@testing-library/react": "^16.0.0",
+		"@types/jest": "^29.5.12",
 		"@types/node": "^20.14.13",
 		"@types/react": "^18",
 		"@types/react-dom": "^18",
 		"@vitejs/plugin-react": "^4.3.1",
+		"@vitest/coverage-v8": "^2.0.5",
+		"@vitest/ui": "^2.0.5",
+		"cypress": "^13.14.2",
 		"eslint": "^8",
 		"eslint-config-next": "14.2.5",
 		"eslint-plugin-storybook": "^0.8.0",

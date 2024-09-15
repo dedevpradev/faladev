@@ -1,56 +1,42 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import * as z from 'zod'
 
-import { IMentoringAgendaService } from '@/services/MentoringAgenda/IMentoringAgendaService.model'
+import { useMutationMentoring } from '@/Mutate/useMutationMentoring'
+import { IMentoringAgendaService } from '@/services/MentoringAgenda/MentoringAgenda.service'
 
-const schema = z.object({
-	name: z.string().min(3, { message: 'Nome deve ter no mínimo 3 caracteres' }),
-	email: z.string().email({ message: 'Endereço de email inválido' }),
-	phone: z.string({ required_error: 'Telefone é necessário' }),
-})
+import { SchemaMentoring } from './mentoring.schema'
+import { RegistrationResult, SchemaMentoringType } from './mentoring.type'
+import { registrationStatusMessages } from './registrationStatusMessages'
 
-export type Schema = z.infer<typeof schema>
+export function useMentoringModel(mentoringService: IMentoringAgendaService) {
+	const [registrationResult, setRegistrationResult] = useState<RegistrationResult | null>(null)
+	const onRegistrationSuccess = () => setRegistrationResult(registrationStatusMessages.success)
+	const onRegistrationError = () => setRegistrationResult(registrationStatusMessages.error)
+	const handleSubmitMentoring = (data: SchemaMentoringType) => createMentoringAgenda(data)
 
-export type ApiStatus = {
-	status: 'success' | 'error' | null
-	message?: {
-		title: string
-		description?: string
-	}
-}
-
-export function useMentoringModel(service: IMentoringAgendaService) {
 	const {
 		register,
 		handleSubmit,
 		formState: { errors, isSubmitting },
-	} = useForm<Schema>({
-		resolver: zodResolver(schema),
+	} = useForm<SchemaMentoringType>({
+		resolver: zodResolver(SchemaMentoring),
+	})
+	const submitButtonLabel = isSubmitting ? 'Registrando...' : 'Quero participar'
+
+	const { mutate: createMentoringAgenda } = useMutationMentoring({
+		service: mentoringService,
+		onError: onRegistrationError,
+		onSuccess: onRegistrationSuccess,
 	})
 
-	const [apiStatus, setApiStatus] = useState<ApiStatus>({ status: null, message: undefined })
-
-	const createMentoringAgenda = async (data: Schema): Promise<void> => {
-		try {
-			await service.SignUpMentoring(data)
-			setApiStatus({
-				status: 'success',
-				message: {
-					title: 'Bem vindo à plataforma!',
-					description: 'Você vai receber um email de confirmação em breve.',
-				},
-			})
-		} catch (error) {
-			setApiStatus({
-				status: 'error',
-				message: { title: 'Oops...', description: 'Ocorreu um erro durante seu cadastro.' },
-			})
-		}
+	return {
+		register,
+		handleSubmit,
+		handleSubmitMentoring,
+		errors,
+		registrationResult,
+		isSubmitting,
+		submitButtonLabel,
 	}
-
-	const handleOnSubmit = handleSubmit(data => createMentoringAgenda(data))
-
-	return { register, handleOnSubmit, errors, apiStatus, isSubmitting }
 }
