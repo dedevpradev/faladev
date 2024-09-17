@@ -77,7 +77,7 @@ Este projeto é uma aplicação open source feita em Go no backend e React no fr
    Execute o comando abaixo para instalar as dependências do projeto:
 
    ```bash
-   go mod tidy
+   make deps
    ```
 
 6. **Rodar o Projeto:**
@@ -88,6 +88,15 @@ Este projeto é uma aplicação open source feita em Go no backend e React no fr
    go run cmd/api/main.go
    ```
    Na primeira vez que você rodar o projeto, você deverá acessar o link será gerado no console para autorizar o seu aplicativo na sua conta Google.
+
+
+7. **Para inspecionar o código:**
+
+   Para verificar a conformidade do código com as diretrizes de estilo, utilize o seguinte comando:
+
+   ```bash
+   make lint
+   ```
 
 ## Instruções para com Docker
 
