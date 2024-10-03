@@ -11,36 +11,35 @@ import (
 	"golang.org/x/oauth2/linkedin"
 )
 
+const (
+	LINKEDIN_CLIENT_ID     = "78ayhj9r8gh3ce"
+	LINKEDIN_CLIENT_SECRET = "Tp7E0Gao0sf34NwY"
+	redirectURL            = "http://localhost:8080/callback"
+)
+
 var (
+	oauth2Config = &oauth2.Config{
+		ClientID:     LINKEDIN_CLIENT_ID,
+		ClientSecret: LINKEDIN_CLIENT_SECRET,
+		Endpoint:     linkedin.Endpoint,
+		RedirectURL:  redirectURL,
+		Scopes:       []string{"r_liteprofile", "r_emailaddress"},
+	}
 	logrusLogger = logrus.New()
 	state        = "abc123"
 )
 
-const (
-	clientID     = "78ayhj9r8gh3ce"
-	clientSecret = "Tp7E0Gao0sf34NwY"
-	redirectURL  = "http://localhost:8080/callback"
-)
-
-var oauth2Config = &oauth2.Config{
-	ClientID:     clientID,
-	ClientSecret: clientSecret,
-	Endpoint:     linkedin.Endpoint,
-	RedirectURL:  redirectURL,
-	Scopes:       []string{"r_liteprofile", "r_emailaddress"},
-}
-
 // Handler to redirect the user to LinkedIn login page
-func loginHandler(w http.ResponseWriter, r *http.Request) {
+func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	url := oauth2Config.AuthCodeURL(state)
 	logrusLogger.Debugf("Redirecting to %s", url)
 	http.Redirect(w, r, url, http.StatusFound)
 }
 
 // Handler for LinkedIn OAuth callback
-func callbackHandler(w http.ResponseWriter, r *http.Request) {
-	state := r.FormValue("state")
-	if state != state {
+func CallbackHandler(w http.ResponseWriter, r *http.Request) {
+	getstate := r.FormValue("state")
+	if getstate != state {
 		logrusLogger.Errorf("Invalid state: %s", state)
 		http.Error(w, "Invalid state", http.StatusBadRequest)
 		return
