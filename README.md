@@ -4,8 +4,8 @@ Este projeto é uma aplicação open source feita em Go no backend e React no fr
 
 ## Pré-requisitos
 
-- Go versão 1.21 ou superior
-- Conta no Google Console para criar credenciais de API
+- Conta no Google (necessária para criação do aplicativo que iremos utilizar para integração com Google Calendar e Gmail)
+- Docker instalado
 
 ## Instalação
 
