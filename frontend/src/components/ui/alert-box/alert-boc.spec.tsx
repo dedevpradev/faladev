@@ -1,8 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 
-import { Status } from '@/app/(mentoring)/mentoring.type'
-
 import { AlertBox } from './'
 
 describe('AlertBox Component', () => {

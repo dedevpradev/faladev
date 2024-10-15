@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
+import Image from 'next/image'
 
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from './index'
 
@@ -57,7 +58,7 @@ export const WithImage: Story = {
 	render: () => (
 		<Card>
 			<CardHeader>
-				<img src="https://via.placeholder.com/150" alt="Placeholder Image" />
+				<Image src="https://via.placeholder.com/150" alt="Placeholder Image" />
 				<CardTitle>Card with Image</CardTitle>
 				<CardDescription>This card has an image in the header.</CardDescription>
 			</CardHeader>
