@@ -1,4 +1,4 @@
-import { SchemaMentoringType } from '../../app/(mentoring)/mentoring.type'
+import { SchemaMentoringType } from '@/app/(mentoring)/mentoring.type'
 
 export const mockSchemaMentoringTypeData: SchemaMentoringType = {
 	name: 'John Doe',

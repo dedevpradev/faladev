@@ -1,13 +1,13 @@
 import { describe, test, expect } from 'vitest'
 
+import { MentoringAgendaService } from './MentoringAgenda.service'
+
 import { SchemaMentoringType } from '@/app/(mentoring)/mentoring.type'
 import {
 	httpClientMockFail,
 	httpClientMockSuccess,
 	mockResponse,
 } from '@/tests/mock/httpClientMock'
-
-import { MentoringAgendaService } from './MentoringAgenda.service'
 
 const mockUserData: SchemaMentoringType = {
 	name: 'John Doe',

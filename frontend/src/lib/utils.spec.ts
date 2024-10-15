@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest'
+
 import { cn } from './utils' // Ajuste o caminho conforme necessário
 
 describe('cn', () => {

@@ -1,7 +1,10 @@
 import { fireEvent, render } from '@testing-library/react'
+import React from 'react'
+import { describe, expect } from 'vitest'
+
 import { Input } from '.'
 
-import React from 'react'
+
 
 describe('<Input />', () => {
 	test('applies custom class', () => {

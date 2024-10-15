@@ -1,7 +1,8 @@
 // Card.test.tsx
-import React from 'react'
 import { render, screen } from '@testing-library/react'
+import React from 'react'
 import { describe, it, expect, vi } from 'vitest'
+
 import { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent } from '.'
 
 describe('Card Components', () => {
