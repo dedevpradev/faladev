@@ -2,31 +2,57 @@
 import Image from 'next/image'
 import { useRef, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
+import { Controller, useFormContext } from 'react-hook-form'
+
 import { ButtonWhiteBlack } from '../Buttons/ButtonWhiteBlack'
 
 const ZERO = 0
 
 interface UploadProps {
-	handleUpload: (file: File) => void
+	onChange: (...event: any[]) => void,
+	name:string
 }
 
-export const Upload = ({ handleUpload }: UploadProps) => {
+export const Upload =({name='upload', ...rest}: {name?: string}) =>{
+	const { control, } = useFormContext()
+
+	return(
+		<Controller 
+			render={({  field: { onChange  }  })=>(
+				<UploadInput onChange={(e:any)=>
+					onChange(e.target.files[ZERO])} name={name} {...rest}/>
+			)}
+			name={name}
+			control={control}
+			defaultValue=""
+		/>
+	)
+}
+
+const UploadInput = ({ onChange,name, ...rest
+}: UploadProps) => {
 	const [imgPreviewUrl, setImgPreviewUrl] = useState<string | null>(null)
 	const inputImageRef = useRef<HTMLInputElement | null>(null);
+	const { setValue } = useFormContext()
 
 	const handleRemoveImage = () => {
 		setImgPreviewUrl(null)
+		if (inputImageRef.current) {
+			inputImageRef.current.value = '';
+			setValue(name,'')
+		}
 	}
 
-    const onDrop = (acceptedFiles: File[]) => {
+    const onDrop = (acceptedFiles: File[]) => { 
         const file = acceptedFiles[ZERO];
         if (file) {
             setImgPreviewUrl(URL.createObjectURL(file));
-            handleUpload(file);
+			setValue(name,file)
         }
     };
 
-	const { getRootProps, getInputProps } = useDropzone({ onDrop });
+	const { getRootProps, getInputProps } = useDropzone({ onDrop,  ...rest
+	});
 	
 	return (
 		<div className="flex flex-col w-fit h-fit relative">
@@ -34,26 +60,18 @@ export const Upload = ({ handleUpload }: UploadProps) => {
 				{imgPreviewUrl && <ButtonWhiteBlack onClick={handleRemoveImage}>&times;</ButtonWhiteBlack>}
 			</div>
 			<div
-			 	{...getRootProps()}
+			 	{...getRootProps()}				
 				className="relative flex flex-col items-center justify-center border border-dashed h-56 w-56 rounded-full overflow-hidden border-cyan-600 z-0"
 				onClick={()=>{inputImageRef.current && inputImageRef.current.click()}}
 			>	
 				<input 
-					{...getInputProps()}
-					id="upload" 
-					name="upload" 
+					{...getInputProps({ onChange })}
+					id="upload" 					
 					type="file" 
 					className="hidden"
 					title="Upload your file" 
 					placeholder="Choose a file" 
 					ref={inputImageRef} 
-					onChange={(e) => {		
-						const file = e.target.files?.[ZERO];
-						if (file) {
-							setImgPreviewUrl(URL.createObjectURL(file));
-							// handleUpload(file);
-						}
-					}}
 				/>
 				{imgPreviewUrl ? (
 					<Image src={imgPreviewUrl} alt="photo preview" layout="fill" objectFit="cover" sizes="auto auto" />
