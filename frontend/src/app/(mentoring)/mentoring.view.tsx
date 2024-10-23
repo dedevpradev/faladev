@@ -1,10 +1,12 @@
 import Link from 'next/link'
-
+import { useForm, SubmitHandler, FormProvider } from "react-hook-form"
 import { TextInput } from '@/components/form/text-input'
+import { AlertBox } from '@/components/ui/alert-box'
 import { ErrorMessage } from '@/components/ui/error-message'
+import { Upload } from '@/components/upload'
 
 import { useMentoringModel } from './mentoring.model'
-import { AlertBox } from '@/components/ui/alert-box'
+import { useEffect } from 'react'
 
 type MentoringViewProps = ReturnType<typeof useMentoringModel>
 
@@ -18,7 +20,11 @@ export function MentoringView(props: MentoringViewProps) {
 		isSubmitting,
 		submitButtonLabel,
 	} = props
-
+const methods = useForm<any>();
+	const formValues = methods.watch();
+   useEffect(()=>{
+	console.log(formValues)
+   },[formValues])
 	return (
 		<main className="flex items-center justify-center bg-gray-100">
 			<div className="w-full max-w-md bg-white shadow-lg rounded-lg p-6">
@@ -71,6 +77,14 @@ export function MentoringView(props: MentoringViewProps) {
 						</button>
 					</div>
 				</form>
+				<FormProvider {...methods}>
+
+							<form onSubmit={methods.handleSubmit(d => console.log(d))}>
+
+				<Upload />
+				<button type='submit'>Submit</button>
+							</form>
+				</FormProvider>
 				{registrationResult && (
 					<AlertBox
 						className="mt-4"
