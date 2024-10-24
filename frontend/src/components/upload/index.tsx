@@ -31,18 +31,17 @@ export const Upload =({name='upload', ...rest}: {name?: string}) =>{
 
 const UploadInput = ({ onChange,name, ...rest
 }: UploadProps) => {
-	const [imgPreviewUrl, setImgPreviewUrl] = useState<string | null>(null)
+	 const [imgPreviewUrl, setImgPreviewUrl] = useState<string | null>(null)
 	const inputImageRef = useRef<HTMLInputElement | null>(null);
-	const { setValue } = useFormContext()
+	const { setValue, } = useFormContext()
 
 	const handleRemoveImage = () => {
-		setImgPreviewUrl(null)
+		 setImgPreviewUrl(null)
 		if (inputImageRef.current) {
 			inputImageRef.current.value = '';
 			setValue(name,'')
 		}
 	}
-
     const onDrop = (acceptedFiles: File[]) => { 
         const file = acceptedFiles[ZERO];
         if (file) {
@@ -50,14 +49,13 @@ const UploadInput = ({ onChange,name, ...rest
 			setValue(name,file)
         }
     };
-
 	const { getRootProps, getInputProps } = useDropzone({ onDrop,  ...rest
 	});
 	
 	return (
 		<div className="flex flex-col w-fit h-fit relative">
 			<div className="z-10 w-11/12 flex justify-end absolute">
-				{imgPreviewUrl && <ButtonWhiteBlack  onClick={handleRemoveImage}>&times;</ButtonWhiteBlack>}
+				{imgPreviewUrl && <ButtonWhiteBlack data-testid="custom-element" onClick={handleRemoveImage}>&times;</ButtonWhiteBlack>}
 			</div>
 			<div
 			 	{...getRootProps()}				

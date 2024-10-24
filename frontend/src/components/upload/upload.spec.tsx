@@ -2,9 +2,10 @@ import { screen, waitFor } from "@testing-library/react"
 import userEvent from '@testing-library/user-event'
 import { expect } from "vitest";
 
+import { FormStateChecker, renderWithFormProvider } from "@/test-utils";
+
 import { Upload } from "."
 
-import { FormStateChecker, renderWithFormProvider } from "@/test-utils";
 
 const ZERO = 0;
 describe('Upload Component',()=>{
@@ -37,7 +38,16 @@ describe('Upload Component',()=>{
         const file = new File(['hello'], 'hello.png', {type: 'image/png'})
         userEvent.upload(inputUpload,file);  
         await waitFor(()=>{
-            expect(screen.getByAltText("photo preview")).toBeInTheDocument();
+            expect(inputUpload.files?.[ZERO]).toStrictEqual(file);
+            expect(inputUpload.files?.item(ZERO)).toStrictEqual(file);
+            expect(inputUpload.files).toHaveLength(1)           
         })
+        // Funciona até aqui
+        const removeImageButton = await waitFor(()=> screen.getByTestId('custom-element')); 
+        expect(removeImageButton).toBeInTheDocument();
+        // userEvent.click(removeImageButton);
+        // await waitFor(() => {
+        //     expect(inputUpload.files).toHaveLength(0);
+        // });
     })
 })
