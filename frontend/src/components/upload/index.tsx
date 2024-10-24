@@ -44,14 +44,17 @@ const UploadInput = ({ onChange,name, ...rest
 	}
     const onDrop = (acceptedFiles: File[]) => { 
         const file = acceptedFiles[ZERO];
+		console.log("file",file);
         if (file) {
-            setImgPreviewUrl(URL.createObjectURL(file));
+			const exemple = URL.createObjectURL(file)
+			console.log("exemple",exemple);
+			setImgPreviewUrl(exemple);
 			setValue(name,file)
         }
     };
 	const { getRootProps, getInputProps } = useDropzone({ onDrop,  ...rest
 	});
-	
+	console.log("imgPreviewUrl",imgPreviewUrl);
 	return (
 		<div className="flex flex-col w-fit h-fit relative">
 			<div className="z-10 w-11/12 flex justify-end absolute">
