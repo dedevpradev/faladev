@@ -1,10 +1,11 @@
 import Link from 'next/link'
 
+import { useMentoringModel } from './mentoring.model'
+
 import { TextInput } from '@/components/form/text-input'
+import { AlertBox } from '@/components/ui/alert-box'
 import { ErrorMessage } from '@/components/ui/error-message'
 
-import { useMentoringModel } from './mentoring.model'
-import { AlertBox } from '@/components/ui/alert-box'
 
 type MentoringViewProps = ReturnType<typeof useMentoringModel>
 
@@ -18,7 +19,6 @@ export function MentoringView(props: MentoringViewProps) {
 		isSubmitting,
 		submitButtonLabel,
 	} = props
-
 	return (
 		<main className="flex items-center justify-center bg-gray-100">
 			<div className="w-full max-w-md bg-white shadow-lg rounded-lg p-6">
