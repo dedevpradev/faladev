@@ -60,9 +60,8 @@ export function MentoringView(props: MentoringViewProps) {
 					</div>
 					<div className="flex items-center justify-center">
 						<button
-							className={`bg-blue-500 text-white font-bold py-3 px-6 rounded-sm transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-300 ${
-								isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'
-							}`}
+							className={`bg-blue-500 text-white font-bold py-3 px-6 rounded-sm transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-300 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'
+								}`}
 							type="submit"
 							data-testid="button-submit"
 							disabled={isSubmitting}
@@ -81,10 +80,10 @@ export function MentoringView(props: MentoringViewProps) {
 				)}
 				<div className="flex justify-center mt-5 w-full text-sm">
 					<p>
-						ou
-						<Link href="/register" className="underline">
+						ou{' '}
+						<Link href="/register" className="text-blue-500 underline hover:text-blue-600">
 							cadastre-se
-						</Link>
+						</Link>{' '}
 						na nossa plataforma!
 					</p>
 				</div>
@@ -94,6 +93,16 @@ export function MentoringView(props: MentoringViewProps) {
 					Essa é uma mentoria gratuita para quem está entrando na área de tecnologia, migrando de
 					área ou buscando crescimento profissional.
 				</p>
+
+				<div className="flex justify-center mt-5 w-full text-sm">
+					<p>
+						Leia nossa{' '}
+						<Link href="/info" className="text-blue-500 underline hover:text-blue-600">
+							Política de Privacidade e Termos de Uso
+						</Link>
+						!
+					</p>
+				</div>
 			</div>
 		</main>
 	)
