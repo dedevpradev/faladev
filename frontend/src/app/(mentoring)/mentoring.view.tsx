@@ -6,7 +6,6 @@ import { TextInput } from '@/components/form/text-input'
 import { AlertBox } from '@/components/ui/alert-box'
 import { ErrorMessage } from '@/components/ui/error-message'
 
-
 type MentoringViewProps = ReturnType<typeof useMentoringModel>
 
 export function MentoringView(props: MentoringViewProps) {
@@ -81,10 +80,10 @@ export function MentoringView(props: MentoringViewProps) {
 				)}
 				<div className="flex justify-center mt-5 w-full text-sm">
 					<p>
-						ou
+						ou{' '}
 						<Link href="/register" className="underline">
 							cadastre-se
-						</Link>
+						</Link>{' '}
 						na nossa plataforma!
 					</p>
 				</div>
