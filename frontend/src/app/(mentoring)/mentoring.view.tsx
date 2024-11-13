@@ -93,6 +93,14 @@ export function MentoringView(props: MentoringViewProps) {
 					Essa é uma mentoria gratuita para quem está entrando na área de tecnologia, migrando de
 					área ou buscando crescimento profissional.
 				</p>
+				<div className="flex justify-center mt-5 w-full text-sm">
+					<p>
+						Leia nossa{' '}
+						<Link href="/info" className="text-blue-500 underline hover:text-blue-600">
+							Política de Privacidade e Termos de Uso
+						</Link>
+					</p>
+				</div>
 			</div>
 		</main>
 	)
