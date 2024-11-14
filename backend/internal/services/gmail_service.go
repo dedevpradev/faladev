@@ -3,13 +3,12 @@ package services
 import (
 	"bytes"
 	"context"
+	"faladev/internal/models"
 	"faladev/pkg/utils"
 	"fmt"
 	"html/template"
-	"log"
 
 	"golang.org/x/oauth2"
-	"google.golang.org/api/calendar/v3"
 	"google.golang.org/api/gmail/v1"
 	"google.golang.org/api/option"
 )
@@ -26,57 +25,62 @@ func NewGmailService(config *oauth2.Config, token *oauth2.Token) EmailService {
 	}
 }
 
-func (gs *GmailService) SendMentorshipInvitation(recipient string, eventDetails *calendar.Event, token *oauth2.Token) error {
+func (gmailService *GmailService) SendInvite(recipient string, eventDetails *models.Event, token *oauth2.Token) error {
 
 	ctx := context.Background()
-	client := gs.config.Client(ctx, token)
+
+	client := gmailService.config.Client(ctx, token)
 
 	srv, err := gmail.NewService(ctx, option.WithHTTPClient(client))
 
 	if err != nil {
-		log.Fatalf("Unable to retrieve Gmail client: %v", err)
-		return fmt.Errorf("Unable to retrieve Gmail client: %v", err)
+		return fmt.Errorf("unable to retrieve Gmail client: %w", err)
 	}
 
-	emailTo := recipient
-	emailFrom := "Marcos Fonseca <contato@marcosfonseca.com.br>"
-	subject := "Convite para Mentoria em Carreira e Tecnologia"
+	emailFrom := fmt.Sprintf("%s <%s>", eventDetails.Organizer, eventDetails.Email)
+	subject := fmt.Sprintf("Convite para %s", eventDetails.Name)
 
-	tmpl, err := template.ParseFiles("templates/email/mentorship.html")
+	body, err := gmailService.getEmailBody("templates/email/mentorship.html", eventDetails)
 
 	if err != nil {
-		log.Fatalf("Error loading template: %v", err)
+		return fmt.Errorf("failed to compose email body: %w", err)
 	}
 
-	data := struct {
-		HangoutLink string
-		HtmlLink    string
-	}{
-		HangoutLink: eventDetails.HangoutLink,
-		HtmlLink:    eventDetails.HtmlLink,
+	fullEmail := gmailService.buildEmailMessage(emailFrom, recipient, subject, body)
+
+	encodedEmail := utils.Base64URLEncode([]byte(fullEmail))
+
+	message := &gmail.Message{
+		Raw: encodedEmail,
+	}
+
+	_, err = srv.Users.Messages.Send("me", message).Do()
+
+	if err != nil {
+		return fmt.Errorf("failed to send email: %w", err)
+	}
+
+	return nil
+}
+
+func (gmailService *GmailService) getEmailBody(templatePath string, eventDetails *models.Event) (string, error) {
+
+	tmpl, err := template.ParseFiles(templatePath)
+
+	if err != nil {
+		return "", fmt.Errorf("error loading template: %w", err)
 	}
 
 	var body bytes.Buffer
 
-	if err := tmpl.Execute(&body, data); err != nil {
-		log.Fatalf("Error executing template: %v", err)
+	if err := tmpl.Execute(&body, eventDetails); err != nil {
+		return "", fmt.Errorf("error executing template: %w", err)
 	}
 
-	emailHeader := fmt.Sprintf("From: %s\r\nTo: %s\r\nSubject: %s\r\nContent-Type: text/html; charset=\"UTF-8\"\r\n\r\n",
-		emailFrom, emailTo, subject)
+	return body.String(), nil
+}
 
-	fullEmail := emailHeader + body.String()
-
-	encodedEmail := utils.Base64URLEncode([]byte(fullEmail))
-
-	var message gmail.Message
-	message.Raw = encodedEmail
-
-	_, err = srv.Users.Messages.Send("me", &message).Do()
-
-	if err != nil {
-		return fmt.Errorf("failed to send email: %v", err)
-	}
-
-	return nil
+func (gmailService *GmailService) buildEmailMessage(from, to, subject, body string) string {
+	return fmt.Sprintf("From: %s\r\nTo: %s\r\nSubject: %s\r\nContent-Type: text/html; charset=\"UTF-8\"\r\n\r\n%s",
+		from, to, subject, body)
 }

@@ -1,3 +1,4 @@
+import { SchemaMentoringType } from '@/app/(mentoring)/mentoring.type'
 export interface IMentoringAgendaService {
-	SignUpMentoring: () => void
+	SignUpMentoring: (data: SchemaMentoringType) => Promise<string>
 }
