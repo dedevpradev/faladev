@@ -52,6 +52,7 @@ services:
       - '8080:8080'
     volumes:
       - ./backend:/app/backend
+      - ./frontend/build:/app/frontend/build
     depends_on:
       - postgres
       - jaeger

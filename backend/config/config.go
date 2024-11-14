@@ -1,7 +1,6 @@
 package config
 
 import (
-	"errors"
 	"log"
 	"os"
 
@@ -12,25 +11,29 @@ import (
 	"google.golang.org/api/gmail/v1"
 )
 
-type OAuth2Config struct {
+type AuthConfig struct {
 	Config *oauth2.Config
 	Token  *oauth2.Token
 }
 
-type Config struct {
-	DatabaseURL string
-	OAuth2      OAuth2Config
-}
+func GetEventGoogleMeet() string {
 
-func getDatabaseURL() string {
-	databaseURL := os.Getenv("DATABASE_URL")
-	if databaseURL == "" {
-		log.Fatal("Please set the DATABASE_URL environment variable")
+	meetEvent := os.Getenv("GOOGLE_MEET_EVENT")
+
+	if meetEvent == "" {
+		log.Fatal("Please set the GOOGLE_MEET_EVENT environment variable")
 	}
-	return databaseURL
+
+	return meetEvent
 }
 
-func getOAuthConfig() *oauth2.Config {
+func SetupOAuthConfig() *oauth2.Config {
+
+	err := godotenv.Load()
+
+	if err != nil {
+		log.Printf("Warning: No .env file found, reading from environment variables. Error: %v", err)
+	}
 
 	clientID := os.Getenv("GOOGLE_CLIENT_ID")
 	clientSecret := os.Getenv("GOOGLE_CLIENT_SECRET")
@@ -47,21 +50,4 @@ func getOAuthConfig() *oauth2.Config {
 		Scopes:       []string{gmail.GmailSendScope, calendar.CalendarScope},
 		Endpoint:     google.Endpoint,
 	}
-}
-
-func LoadConfig() (*Config, error) {
-
-	err := godotenv.Load()
-
-	if err != nil {
-		return nil, errors.New("failed to load environment variables")
-	}
-
-	oauthConfig := getOAuthConfig()
-	databaseURL := getDatabaseURL()
-
-	return &Config{
-		DatabaseURL: databaseURL,
-		OAuth2:      OAuth2Config{Config: oauthConfig},
-	}, nil
 }

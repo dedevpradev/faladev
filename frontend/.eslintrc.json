@@ -1,15 +1,6 @@
 {
-	"extends": ["next/core-web-vitals", "plugin:storybook/recommended"],
-	"rules": {
-		"@typescript-eslint/no-misused-promises": "off",
-		"@typescript-eslint/consistent-type-assertions": "off",
-		"import/order": [
-			"warn",
-			{
-				"groups": ["builtin", "external", "internal", "parent", "sibling", "index"],
-				"newlines-between": "always",
-				"alphabetize": { "order": "asc", "caseInsensitive": true }
-			}
-		]
-	}
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:storybook/recommended"
+  ]
 }

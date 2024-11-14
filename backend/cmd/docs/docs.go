@@ -9,84 +9,13 @@ const docTemplate = `{
     "info": {
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
-        "termsOfService": "http://swagger.io/terms/",
-        "contact": {
-            "name": "Suporte da API Faladev",
-            "url": "http://www.faladev.com/support",
-            "email": "support@faladev.com"
-        },
-        "license": {
-            "name": "Apache 2.0",
-            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-        },
+        "contact": {},
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/": {
-            "get": {
-                "description": "Renders the form.html page to display user information form.",
-                "produces": [
-                    "text/html"
-                ],
-                "summary": "Render form page",
-                "responses": {
-                    "200": {
-                        "description": "HTML content of the form page",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/callback": {
-            "get": {
-                "description": "Exchange code for token and save it",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Handle OAuth2 callback",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "State token",
-                        "name": "state",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Authorization code",
-                        "name": "code",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "303": {
-                        "description": "Redirects to /"
-                    },
-                    "400": {
-                        "description": "State token doesn't match",
-                        "schema": {
-                            "$ref": "#/definitions/http.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Unable to retrieve or save token",
-                        "schema": {
-                            "$ref": "#/definitions/http.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/event": {
+        "/event-handler": {
             "post": {
                 "description": "Handles event creation, guest addition, email sending, and redirects to Google Meet link.",
                 "consumes": [
@@ -129,13 +58,75 @@ const docTemplate = `{
                     "400": {
                         "description": "No Google Meet link available or other errors",
                         "schema": {
-                            "$ref": "#/definitions/http.ErrorResponse"
+                            "$ref": "#/definitions/handlers.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/http.ErrorResponse"
+                            "$ref": "#/definitions/handlers.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/form": {
+            "get": {
+                "description": "Renders the form.html page to display user information form.",
+                "produces": [
+                    "text/html"
+                ],
+                "summary": "Render form page",
+                "responses": {
+                    "200": {
+                        "description": "HTML content of the form page",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/oauth/callback": {
+            "get": {
+                "description": "Exchange code for token and save it",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Handle OAuth2 callback",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "State token",
+                        "name": "state",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization code",
+                        "name": "code",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "303": {
+                        "description": "Redirects to /"
+                    },
+                    "400": {
+                        "description": "State token doesn't match",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Unable to retrieve or save token",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.ErrorResponse"
                         }
                     }
                 }
@@ -143,7 +134,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "http.ErrorResponse": {
+        "handlers.ErrorResponse": {
             "type": "object",
             "properties": {
                 "error": {
@@ -151,21 +142,17 @@ const docTemplate = `{
                 }
             }
         }
-    },
-    "externalDocs": {
-        "description": "OpenAPI Specification",
-        "url": "https://swagger.io/resources/open-api/"
     }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "1.0",
-	Host:             "localhost:8080",
-	BasePath:         "/",
+	Version:          "",
+	Host:             "",
+	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "Faladev API",
-	Description:      "Esta é uma API exemplo do Faladev, que integra com o Google Calendar e o Gmail.",
+	Title:            "",
+	Description:      "",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

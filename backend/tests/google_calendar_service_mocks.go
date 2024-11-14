@@ -1,8 +1,8 @@
 package services
 
 import (
-	"errors"
 	"faladev/internal/services"
+	"fmt"
 
 	"google.golang.org/api/calendar/v3"
 )
@@ -11,7 +11,6 @@ type FakeCalendarService struct {
 	EventsListMock  func(calendarID string) services.EventsListCall
 	GetEventMock    func(calendarID, eventID string) services.EventCall
 	UpdateEventMock func(calendarID, eventID string, event *calendar.Event) services.EventCall
-	InsertEventMock func(calendarID string, event *calendar.Event) services.EventCall
 }
 
 func (f *FakeCalendarService) EventsList(calendarID string) services.EventsListCall {
@@ -35,13 +34,6 @@ func (f *FakeCalendarService) UpdateEvent(calendarID, eventID string, event *cal
 	return nil
 }
 
-func (f *FakeCalendarService) InsertEvent(calendarID string, event *calendar.Event) services.EventCall {
-	if f.InsertEventMock != nil {
-		return f.InsertEventMock(calendarID, event)
-	}
-	return nil
-}
-
 type FakeEventsListCall struct {
 	DoFunc func() (*calendar.Events, error)
 }
@@ -50,7 +42,7 @@ func (f *FakeEventsListCall) Do() (*calendar.Events, error) {
 	if f.DoFunc != nil {
 		return f.DoFunc()
 	}
-	return nil, errors.New("Do function not implemented")
+	return nil, fmt.Errorf("Do function not implemented")
 }
 
 type FakeEventCall struct {
@@ -61,5 +53,5 @@ func (f *FakeEventCall) Do() (*calendar.Event, error) {
 	if f.DoFunc != nil {
 		return f.DoFunc()
 	}
-	return nil, errors.New("Do function not implemented")
+	return nil, fmt.Errorf("Do function not implemented")
 }

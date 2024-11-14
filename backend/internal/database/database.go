@@ -2,6 +2,7 @@ package database
 
 import (
 	"log"
+	"os"
 	"sync"
 	"time"
 
@@ -16,32 +17,35 @@ var (
 	once sync.Once
 )
 
-func InitDB(databaseURL string) (*gorm.DB, error) {
-
-	var err error
+func GetDB() *gorm.DB {
 
 	once.Do(func() {
 
+		databaseURL := os.Getenv("DATABASE_URL")
+
+		if databaseURL == "" {
+			log.Fatal("DATABASE_URL environment variable not set")
+		}
+
+		var err error
+
 		db, err = gorm.Open(postgres.Open(databaseURL), &gorm.Config{})
+
 		if err != nil {
-			log.Printf("failed to connect to database: %v", err)
-			return
+			panic("failed to connect to database")
 		}
 
 		sqlDB, err := db.DB()
+
 		if err != nil {
-			log.Printf("failed to get database connection handle: %v", err)
-			return
+			panic("failed to get database connection handle")
 		}
 
 		sqlDB.SetMaxIdleConns(20)
 		sqlDB.SetMaxOpenConns(200)
 		sqlDB.SetConnMaxLifetime(time.Hour)
+
 	})
 
-	if err != nil {
-		return nil, err
-	}
-
-	return db, nil
+	return db
 }
