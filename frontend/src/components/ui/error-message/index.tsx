@@ -1,8 +1,6 @@
-import { ErrorMessage as ErrorMessageHookForm } from '@hookform/error-message'
 
-type ErrorMessageProps = React.ComponentProps<typeof ErrorMessageHookForm>
 
-export const ErrorMessage = ({ errors, name }: ErrorMessageProps) => {
+export const ErrorMessage = ({ errors, name }: { errors: Record<string, { message: string }>, name: string }) => {
 	const existError = errors && Object.keys(errors).includes(name)
 
 	return (
