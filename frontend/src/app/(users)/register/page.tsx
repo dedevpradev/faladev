@@ -1,3 +1,5 @@
+'use client'
+
 import { RegisterView } from './register.view'
 import { HttpAxiosAdapter } from '@/infra/http/HttpClient'
 import { UserService } from '@/services/UserService/User.service'

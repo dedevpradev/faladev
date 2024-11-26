@@ -9,6 +9,7 @@ import { useUserModel } from "./user.model"
 
 type RegisterViewProps = ReturnType<typeof useUserModel>
 
+
 export const RegisterView = (props: RegisterViewProps) => {
   const { register, errors, isSubmitting } = props
 
@@ -23,22 +24,22 @@ export const RegisterView = (props: RegisterViewProps) => {
           <div className="space-y-2">
             <Label htmlFor="name">Nome Completo</Label>
             <Input id="name" placeholder="João Gomes" aria-required {...register('name')} />
-            <ErrorMessage errors={errors} name="name" />
+            <ErrorMessage errors={errors as Record<string, { message: string; }>} name="name" />
           </div>
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input id="email" type="email" placeholder="me@example.com" {...register('email')} aria-required />
-            <ErrorMessage errors={errors} name="email" />
+            <ErrorMessage errors={errors as Record<string, { message: string; }>} name="email" />
           </div>
           <div className="space-y-2">
             <Label htmlFor="password">Senha</Label>
-            <Input id="password" type="password" name="password" {...register('password')} aria-required />
-            <ErrorMessage errors={errors} name="password" />
+            <Input id="password" type="password" {...register('password')} aria-required />
+            <ErrorMessage errors={errors as Record<string, { message: string; }>} name="password" />
           </div>
           <div className="space-y-2">
             <Label htmlFor="confirmPassword">Confirme a Senha</Label>
-            <Input id="confirmPassword" type="password" name="confirmPassword"  {...register('confirmPassword')} aria-required />
-            <ErrorMessage errors={errors} name="confirmPassword" />
+            <Input id="confirmPassword" type="password"  {...register('confirmPassword')} aria-required />
+            <ErrorMessage errors={errors as Record<string, { message: string; }>} name="confirmPassword" />
           </div>
           <Button className="w-full" type="submit" disabled={isSubmitting}>
             Cadastrar
