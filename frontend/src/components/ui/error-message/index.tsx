@@ -1,6 +1,10 @@
-
-
-export const ErrorMessage = ({ errors, name }: { errors: Record<string, { message: string }>, name: string }) => {
+export const ErrorMessage = ({
+	errors,
+	name,
+}: {
+	errors: Record<string, { message: string }>
+	name: string
+}) => {
 	const existError = errors && Object.keys(errors).includes(name)
 
 	return (
