@@ -8,7 +8,7 @@ import {
 	successfulMentoringServiceMock,
 } from '@/tests/mock/mentoringServiceMock'
 import { mockSchemaMentoringTypeData } from '@/tests/mock/mockSchemaMentoringTypeData'
-import { registrationStatusMessages } from './registrationStatusMessages'
+import { registrationStatusMessages } from '../../shared/registrationStatusMessages'
 
 describe('useMentoringModel', () => {
 	it('should return initial state', () => {

@@ -7,7 +7,7 @@ import { IMentoringAgendaService } from '@/services/MentoringAgenda/MentoringAge
 
 import { SchemaMentoring } from './mentoring.schema'
 import { RegistrationResult, SchemaMentoringType } from './mentoring.type'
-import { registrationStatusMessages } from './registrationStatusMessages'
+import { registrationStatusMessages } from '../../shared/registrationStatusMessages'
 
 export function useMentoringModel(mentoringService: IMentoringAgendaService) {
 	const [registrationResult, setRegistrationResult] = useState<RegistrationResult | null>(null)
