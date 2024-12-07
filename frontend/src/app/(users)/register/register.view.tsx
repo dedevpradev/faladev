@@ -1,20 +1,18 @@
-import { AlertBox } from "@/components/ui/alert-box"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ErrorMessage } from "@/components/ui/error-message"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useUserModel } from "./user.model"
-
+import { AlertBox } from "@/components/ui/alert-box"
 
 type RegisterViewProps = ReturnType<typeof useUserModel>
 
-
 export const RegisterView = (props: RegisterViewProps) => {
-  const { register, errors, isSubmitting } = props
+  const { register, errors, isSubmitting, handleUserRegister, registrationStatus } = props
 
   return (
-    <form >
+    <form onSubmit={handleUserRegister}>
       <Card className="mx-auto max-w-sm">
         <CardHeader>
           <CardTitle className="text-3xl">Cadastre-se!</CardTitle>
@@ -44,7 +42,14 @@ export const RegisterView = (props: RegisterViewProps) => {
           <Button className="w-full" type="submit" disabled={isSubmitting}>
             Cadastrar
           </Button>
-          {/* <AlertBox {...state} /> */}
+          {registrationStatus && (
+            <AlertBox
+              className="mt-4"
+              status={registrationStatus.status}
+              title={registrationStatus.title}
+              description={registrationStatus.description}
+            />
+          )}
         </CardContent>
       </Card>
     </form>

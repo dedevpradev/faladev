@@ -1,7 +1,3 @@
-
-
-
-
 import { UserSchema } from '@/app/(users)/register/user.schema'
 import { HttpClient, HttpMethod } from '@/infra/http/HttpClient.types'
 import { z } from 'zod'
@@ -17,7 +13,7 @@ export class UserService implements IUserService {
 
   async RegisterUser(userData: UserRegisterData): Promise<string> {
     const response = await this.httpClient.request<string>({
-      endpoint: '/events', // TODO: validar endpoint
+      endpoint: '/events',
       method: HttpMethod.POST,
       body: userData,
     })

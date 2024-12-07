@@ -1,12 +1,16 @@
 'use client'
 
-import { UserRegisterData, type UserService } from "@/services/UserService/User.service";
+import { UserRegisterData, type UserService } from "@/services/User/User.service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { UserSchema } from "./user.schema";
-
+import { registrationStatusMessages } from "@/shared/registrationStatusMessages";
+import { useMutationUser } from "@/Mutate/useUserMutation";
+import { useState } from "react";
+import { RegistrationResult } from "./types";
 
 export const useUserModel = (userService: UserService) => {
+  const [registrationStatus, setRegistrationStatus] = useState<RegistrationResult>()
 
   const {
     register,
@@ -16,10 +20,20 @@ export const useUserModel = (userService: UserService) => {
     resolver: zodResolver(UserSchema),
   })
 
-  return {
+  const handleUserRegister = handleSubmit((data: UserRegisterData) => registerUser(data))
+
+  const { mutate: registerUser } = useMutationUser({
+    service: userService,
+    onError: () => setRegistrationStatus(registrationStatusMessages.error),
+    onSuccess: () => setRegistrationStatus(registrationStatusMessages.success),
+  })
+
+  return {  
     register,
     errors,
-    isSubmitting
+    isSubmitting,
+    handleUserRegister,
+    registrationStatus
   }
 }
 
