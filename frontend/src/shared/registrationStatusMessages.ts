@@ -1,4 +1,4 @@
-import { RegistrationResult, Status } from './mentoring.type'
+import { RegistrationResult, Status } from '../app/(mentoring)/mentoring.type'
 
 export const registrationStatusMessages: Record<Status, RegistrationResult> = {
 	success: {

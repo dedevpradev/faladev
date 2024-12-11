@@ -53,6 +53,7 @@
 		"@types/node": "^20.14.13",
 		"@types/react": "^18",
 		"@types/react-dom": "^18",
+		"@types/react-dropzone": "^4.2.2",
 		"@vitejs/plugin-react": "^4.3.1",
 		"@vitest/coverage-v8": "^2.0.5",
 		"@vitest/ui": "^2.0.5",

@@ -1,3 +1,4 @@
+import { expect } from 'vitest'
 import { fireEvent } from '@testing-library/react'
 
 type ChangeInputProps = {

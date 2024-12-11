@@ -12,7 +12,7 @@ import { renderView } from '@/tests/renderView'
 
 import { useMentoringModel } from './mentoring.model'
 import { MentoringView } from './mentoring.view'
-import { registrationStatusMessages } from './registrationStatusMessages'
+import { registrationStatusMessages } from '../../shared/registrationStatusMessages'
 
 type MakeSutProps = {
 	service?: IMentoringAgendaService

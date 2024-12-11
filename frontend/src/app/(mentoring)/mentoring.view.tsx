@@ -35,7 +35,7 @@ export function MentoringView(props: MentoringViewProps) {
 							placeholder="Digite seu nome"
 							{...register('name')}
 						/>
-						<ErrorMessage errors={errors} name="name" />
+						<ErrorMessage errors={errors as Record<string, { message: string; }>} name="name" />
 					</div>
 					<div className="mb-2">
 						<TextInput
@@ -46,7 +46,7 @@ export function MentoringView(props: MentoringViewProps) {
 							placeholder="Digite seu e-mail"
 							{...register('email')}
 						/>
-						<ErrorMessage errors={errors} name="email" />
+						<ErrorMessage errors={errors as Record<string, { message: string; }>} name="email" />
 					</div>
 					<div className="mb-2">
 						<TextInput
@@ -56,7 +56,7 @@ export function MentoringView(props: MentoringViewProps) {
 							placeholder="Digite seu telefone"
 							{...register('phone')}
 						/>
-						<ErrorMessage errors={errors} name="phone" />
+						<ErrorMessage errors={errors as Record<string, { message: string; }>} name="phone" />
 					</div>
 					<div className="flex items-center justify-center">
 						<button

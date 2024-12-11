@@ -1,4 +1,4 @@
-import { registrationStatusMessages } from '../../../src/app/(mentoring)/registrationStatusMessages'
+import { registrationStatusMessages } from '../../../src/shared/registrationStatusMessages'
 
 import { MentoringPage } from './MentotingPage'
 
