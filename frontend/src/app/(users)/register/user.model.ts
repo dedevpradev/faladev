@@ -1,6 +1,6 @@
 'use client'
 
-import { UserRegisterData, type UserService } from "@/services/User/User.service";
+import { IUserService, UserRegisterData, type UserService } from "@/services/User/User.service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { UserSchema } from "./user.schema";
@@ -9,7 +9,7 @@ import { useMutationUser } from "@/Mutate/useUserMutation";
 import { useState } from "react";
 import { RegistrationResult } from "./types";
 
-export const useUserModel = (userService: UserService) => {
+export const useUserModel = (userService: IUserService) => {
   const [registrationStatus, setRegistrationStatus] = useState<RegistrationResult>()
 
   const {
